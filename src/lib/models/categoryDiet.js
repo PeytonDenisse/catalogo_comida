@@ -7,7 +7,6 @@ export async function createCategoryDiet(name){
     } catch (error) {
         return {success: false, data: [], message: 'Error del servidor'}
     }
-    return res;
 }
 
 export async function getCategoriesDiet(){
