@@ -18,3 +18,33 @@ export async function getCategoriesDiet(){
         return {success: false, data: [], message: 'Error del servidor'}
     }
 }
+
+
+// Delete
+export async function deleteCategoryDiet(id){
+    try {
+        const res = await query(
+            "DELETE FROM category_diet WHERE id = ?",
+            [id]
+        );
+        return { success: true, data: res };
+    } catch (error) {
+        return { success: false, message: "Error deleting" };
+    }
+}
+
+
+
+// update
+export async function updateCategoryDiet(id, name){
+    try {
+        const res = await query(
+            "UPDATE category_diet SET name = ? WHERE id = ?",
+            [name, id]
+        );
+
+        return { success: true, data: res };
+    } catch (error) {
+        return { success: false, message: "Error updating" };
+    }
+}

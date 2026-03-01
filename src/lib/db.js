@@ -21,3 +21,4 @@ export async function query(query, params = []) {
   const [rows] = await pool.execute(query, params);
   return rows;
 }
+
