@@ -1,18 +1,39 @@
 <script>
     import { goto } from "$app/navigation";
+    import ViewContModal from '$lib/components/modals/ViewContModal.svelte';
+    import ViewModal from "$lib/components/modals/ViewModal.svelte";
 
-    async function handleLogin(){
-        const res = await fetch('/api/login');
+    let actualModal = '';
+    let actualID = 0;
+
+    async function handleLogin(e){
+        const form = e.target;
+        const formData = new FormData(form);
+        const res = await fetch('/api/login', {method: 'POST', body: formData});
         const data = await res.json();
+        console.log(data);
+
+        if(data.success){
+            switch (data.status) {
+                case "logged_in":
+                    goto("/panel")
+                break;
+            }
+        }else{
+            alert(data.message)
+        }
     }
 
 </script>
 
 <main>
-    <form action="">
-        <input type="email" placeholder="Correo">
-        <input type="password" placeholder="Contraseña">
-        <a href="/registrarse">Crear una cuenta</a>
+    <form on:submit|preventDefault={handleLogin}>
+        <h1>Iniciar Sesión</h1>
+        <p class="sub">ingrese sus credenciales</p>
+        <input type="mail" placeholder="Correo" name="mail" required>
+        <input type="password" placeholder="Contraseña" name="pass" required autocomplete="off">
+        <button type="submit">Iniciar Sesión</button>
+        <a href="/register">Crear una cuenta nueva</a>
     </form>
 </main>
 
