@@ -2,6 +2,93 @@
 	import { onMount } from "svelte";
 
 	/* =========================
+	FOOD STATE
+	========================= */
+	let foods = [];
+	let title = "";
+	let description = "";
+	let image_url = "";
+	let price = "";
+	let cat_time_id = "";
+	let cat_type_id = "";
+	let cat_diet_id = "";
+	let editingFoodId = null;
+
+	async function loadFoods() {
+		const res = await fetch("/api/food");
+		const data = await res.json();
+		foods = data.data;
+	}
+
+	async function addFood() {
+		const formData = new FormData();
+		formData.append("title", title);
+		formData.append("description", description);
+		formData.append("image_url", image_url);
+		formData.append("price", price);
+		formData.append("cat_time_id", cat_time_id);
+		formData.append("cat_type_id", cat_type_id);
+		formData.append("cat_diet_id", cat_diet_id);
+
+		await fetch("/api/food", {
+			method: "POST",
+			body: formData
+		});
+
+		resetFoodForm();
+		loadFoods();
+	}
+
+	async function updateFood() {
+		const formData = new FormData();
+		formData.append("id", editingFoodId);
+		formData.append("title", title);
+		formData.append("description", description);
+		formData.append("image_url", image_url);
+		formData.append("price", price);
+		formData.append("cat_time_id", cat_time_id);
+		formData.append("cat_type_id", cat_type_id);
+		formData.append("cat_diet_id", cat_diet_id);
+
+		await fetch("/api/food", {
+			method: "PUT",
+			body: formData
+		});
+
+		resetFoodForm();
+		loadFoods();
+	}
+
+	async function deleteFood(id) {
+		await fetch(`/api/food?id=${id}`, {
+			method: "DELETE"
+		});
+		loadFoods();
+	}
+
+	function startEditFood(food) {
+		title = food.title;
+		description = food.description;
+		image_url = food.image_url;
+		price = food.price;
+		cat_time_id = food.cat_time_id;
+		cat_type_id = food.cat_type_id;
+		cat_diet_id = food.cat_diet_id;
+		editingFoodId = food.id;
+	}
+
+	function resetFoodForm() {
+		title = "";
+		description = "";
+		image_url = "";
+		price = "";
+		cat_time_id = "";
+		cat_type_id = "";
+		cat_diet_id = "";
+		editingFoodId = null;
+	}
+
+	/* =========================
 	   DIET STATE
 	========================= */
 	let diets = [];
@@ -166,8 +253,55 @@
 		loadDiets();
 		loadTimes();
 		loadTypes();
+		loadFoods();
 	});
 </script>
+
+<hr /><hr />
+
+	<h1>Food</h1>
+
+	<input bind:value={title} placeholder="Title" />
+	<input bind:value={description} placeholder="Description" />
+	<input bind:value={image_url} placeholder="Image URL" />
+	<input bind:value={price} placeholder="Price" type="number" />
+
+	<select bind:value={cat_time_id}>
+		<option value="">Select Time</option>
+		{#each times as time}
+			<option value={time.id}>{time.name}</option>
+		{/each}
+	</select>
+
+	<select bind:value={cat_type_id}>
+		<option value="">Select Type</option>
+		{#each types as type}
+			<option value={type.id}>{type.name}</option>
+		{/each}
+	</select>
+
+	<select bind:value={cat_diet_id}>
+		<option value="">Select Diet</option>
+		{#each diets as diet}
+			<option value={diet.id}>{diet.name}</option>
+		{/each}
+	</select>
+
+	<br /><br />
+
+	<button on:click={addFood}>Add Food</button>
+	<button on:click={updateFood}>Update Food</button>
+
+	<hr />
+
+	{#each foods as food}
+		<div>
+			<strong>{food.title}</strong> - ${food.price}
+			<br />
+			<button on:click={() => startEditFood(food)}>Edit</button>
+			<button on:click={() => deleteFood(food.id)}>Delete</button>
+		</div>
+	{/each}
 
 
 <!-- =========================

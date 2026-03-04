@@ -1,4 +1,4 @@
-import { createFood, getAllFood, getFoodById, deleteFood } from "$lib/models/food";
+import { createFood, getAllFood, getFoodById, deleteFood, updateFood } from "$lib/models/food";
 import { json } from "@sveltejs/kit";
 
 export async function POST({ request }){
