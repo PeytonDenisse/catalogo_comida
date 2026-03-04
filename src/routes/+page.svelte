@@ -134,23 +134,27 @@
 			</div>
 		</header>
 
-		<div class="product-grid">
-			{#each types as type}
-				<div class="card-wrapper">
-					<Card 
-						nombre={type.name} 
-						categoria="Categoría de comida" 
-						precio={0} 
-						stock={10} 
-					/>
-					<div class="admin-actions">
-						<button class="edit" on:click={() => { typeName = type.name; editingTypeId = type.id; }}>Editar</button>
-						<button class="delete" on:click={() => deleteType(type.id)}>Eliminar</button>
-					</div>
-				</div>
-			{/each}
-		</div>
-	</section>
+<div class="product-grid">
+    {#each types as type}
+        <div class="card-wrapper">
+            <Card 
+                nombre={type.name} 
+                categoria="Categoría de comida" 
+                precio={0} 
+                stock={10} 
+            />
+            <div class="admin-actions">
+                <button class="edit" on:click={() => { typeName = type.name; editingTypeId = type.id; }}>Editar</button>
+                <button class="delete" on:click={() => deleteType(type.id)}>Eliminar</button>
+            </div>
+        </div>
+    {:else}
+        <div class="empty-state">
+            <p>🚫 No se encontraron tipos de comida.</p>
+            <span>Intenta agregar uno nuevo arriba.</span>
+        </div>
+    {/each}
+</div>
 
 	<hr class="separator" />
 
