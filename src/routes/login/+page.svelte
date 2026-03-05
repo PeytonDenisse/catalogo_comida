@@ -1,5 +1,7 @@
 <script>
     import { goto } from "$app/navigation";
+    import ViewContModal from '$lib/components/modals/ViewContModal.svelte';
+    import ViewModal from "$lib/components/modals/ViewModal.svelte";
 
     // Variables para almacenar los datos del usuario
     let email = "";

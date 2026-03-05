@@ -1,4 +1,4 @@
-import { loginUser } from "$lib/models/user";
+import { loginUser } from "$lib/models/users";
 import { json } from "@sveltejs/kit";
 
 export async function POST({ request, cookies }){
@@ -10,7 +10,7 @@ export async function POST({ request, cookies }){
     const res = await loginUser({ mail, pass });
     
     if(res.success && res.status === 'logged_in'){
-        cookies.set('idUser', res.idUser, {
+        cookies.set('dFoodToken', res.token, {
             httpOnly: true,
             path: "/",
             secure: process.env.NODE_ENV === "production",
