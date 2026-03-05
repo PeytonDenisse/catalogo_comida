@@ -2,6 +2,8 @@
 import { onMount } from "svelte";
 
 let foods = [];
+let foodById = null;
+let searchId = "";
 
 let id = "";
 let title = "";
@@ -21,6 +23,19 @@ async function loadFoods(){
 }
 
 
+// GET FOOD BY ID
+async function getFood(){
+
+    if(!searchId) return;
+
+    const res = await fetch(`/api/food/${searchId}`);
+    const data = await res.json();
+
+    foodById = data.data;
+}
+
+
+// BUILD FORM
 function buildForm(){
 
     const form = new FormData();
@@ -56,7 +71,6 @@ async function createFood(){
 async function updateFood(){
 
     const form = buildForm();
-
     form.append("id", id);
 
     await fetch("/api/food",{
@@ -135,11 +149,24 @@ onMount(()=>{
 
 <button on:click={clearForm}>Clear</button>
 
+<hr>
+
+<h2>Get Food By ID 🔍</h2>
+
+<input placeholder="Enter Food ID" bind:value={searchId} />
+<button on:click={getFood}>Search</button>
+
+{#if foodById}
+<div style="border:2px solid green; padding:10px; margin-top:10px;">
+    <p><strong>{foodById.title}</strong></p>
+    <p>{foodById.description}</p>
+    <p>Price: ${foodById.price}</p>
+</div>
+{/if}
 
 <hr>
 
-
-<h2>Food List</h2>
+<h2>All Food</h2>
 
 {#each foods as food}
 
@@ -150,7 +177,6 @@ onMount(()=>{
 <p>Price: ${food.price}</p>
 
 <button on:click={()=>editFood(food)}>Edit</button>
-
 <button on:click={()=>deleteFood(food.id)}>Delete</button>
 
 </div>
