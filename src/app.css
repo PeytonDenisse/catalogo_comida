@@ -1,13 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* Importamos solo los grosores (weights) que realmente vas a usar para mejorar el tiempo de carga */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  /* Variables CSS para facilitar el mantenimiento */
+  --bg-color: #1a1a1a;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --font-body: 'Poppins', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-heading: 'Montserrat', system-ui, sans-serif;
+
+  /* Aplicamos la variable de la fuente para el cuerpo del texto */
+  font-family: var(--font-body);
+  line-height: 1.6;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--text-color);
+  background-color: var(--bg-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,7 +23,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body{
-    padding: 0;
-    margin: 0;
+/* Reset universal: Fundamental para que el padding no deforme el tamaño de las cajas */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* Asegura que el body siempre ocupe al menos el alto completo de la pantalla */
+  min-height: 100vh;
+  /* Opcional: Ayuda si el contenido no llena la pantalla y quieres un footer abajo */
+  display: flex;
+  flex-direction: column; 
+}
+
+/* Aplicamos Montserrat específicamente a los títulos para crear contraste con Poppins */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
 }
