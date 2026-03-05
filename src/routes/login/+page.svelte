@@ -33,7 +33,9 @@
         <input type="mail" placeholder="Correo" name="mail" required>
         <input type="password" placeholder="Contraseña" name="pass" required autocomplete="off">
         <button type="submit">Iniciar Sesión</button>
+        
         <a href="/register">Crear una cuenta nueva</a>
+        <a href="/" class="back-link">⬅ Volver al catálogo</a> 
     </form>
 </main>
 
