@@ -1,12 +1,12 @@
-export async function GET({ url }) {
+import { getFoodById, updateFood, deleteFood } from "$lib/models/food";
+import { json } from "@sveltejs/kit";
 
-    const id = url.searchParams.get("id");
+// GET ONE FOOD
+export async function GET({ params }) {
 
-    if(id){
-        const res = await getFoodById(id);
-        return json(res);
-    }
+    const id = params.id;
 
-    const res = await getFoods();
+    const res = await getFoodById(id);
+
     return json(res);
 }
