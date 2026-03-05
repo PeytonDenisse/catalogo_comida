@@ -1,4 +1,5 @@
 import { query } from "$lib/db";
+import { get } from "svelte/store";
 
 export async function createCategoryDiet(name){
     try {
@@ -9,6 +10,7 @@ export async function createCategoryDiet(name){
     }
 }
 
+
 export async function getCategoriesDiet(){
     try {
         const res = await query("SELECT * FROM category_diet")
@@ -17,6 +19,32 @@ export async function getCategoriesDiet(){
         return {success: false, data: [], message: 'Error del servidor'}
     }
 }
+
+// GET ONE (with 404 validation)
+// export async function getCategoryDietById(id){
+//     try {
+//         const res = await query(
+//             "SELECT * FROM category_diet WHERE id = ?",
+//             [id]
+//         );
+
+//         if (res.length === 0) {
+//             return { 
+//                 success: false, 
+//                 message: "Category diet not found",
+//                 status: 404
+//             };
+//         }
+
+//         return { success: true, data: res[0] };
+
+//     } catch (error) {
+//         return { 
+//             success: false, 
+//             message: "Error getting category diet" 
+//         };
+//     }
+// }
 
 
 // Delete

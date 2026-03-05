@@ -50,7 +50,7 @@
         
         <div class="footer-links">
             <span>¿No tienes cuenta?</span>
-            <a href="/registrarse">Crear una cuenta</a>
+            <a href="/register">Crear una cuenta</a>
         </div>
     </form>
 </main>
