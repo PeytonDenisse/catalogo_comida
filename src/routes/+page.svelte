@@ -1,165 +1,327 @@
 <script>
-    import { onMount } from "svelte";
+	import { onMount } from "svelte";
 
-    let foods = [];
+	/* =========================
+	FOOD STATE
+	========================= */
+	let foods = [];
+	let title = "";
+	let description = "";
+	let image_url = "";
+	let price = "";
+	let cat_time_id = "";
+	let cat_type_id = "";
+	let cat_diet_id = "";
+	let editingFoodId = null;
 
-    // category lists
-    let times = [];
-    let types = [];
-    let diets = [];
+	async function loadFoods() {
+		const res = await fetch("/api/food");
+		const data = await res.json();
+		foods = data.data;
+	}
 
-    // form fields
-    let id = "";
-    let title = "";
-    let description = "";
-    let image_url = "";
-    let price = "";
-    let cat_time_id = "";
-    let cat_type_id = "";
-    let cat_diet_id = "";
+	async function addFood() {
+		const formData = new FormData();
+		formData.append("title", title);
+		formData.append("description", description);
+		formData.append("image_url", image_url);
+		formData.append("price", price);
+		formData.append("cat_time_id", cat_time_id);
+		formData.append("cat_type_id", cat_type_id);
+		formData.append("cat_diet_id", cat_diet_id);
 
-    // LOAD EVERYTHING
-    async function loadAll() {
-        const foodRes = await fetch("/api/food");
-        const foodData = await foodRes.json();
-        foods = foodData.data || [];
+		await fetch("/api/food", {
+			method: "POST",
+			body: formData
+		});
 
-        const timeRes = await fetch("/api/categoryTime");
-        const timeData = await timeRes.json();
-        times = timeData.data || [];
+		resetFoodForm();
+		loadFoods();
+	}
 
-        const typeRes = await fetch("/api/categoryType");
-        const typeData = await typeRes.json();
-        types = typeData.data || [];
+	async function updateFood() {
+		const formData = new FormData();
+		formData.append("id", editingFoodId);
+		formData.append("title", title);
+		formData.append("description", description);
+		formData.append("image_url", image_url);
+		formData.append("price", price);
+		formData.append("cat_time_id", cat_time_id);
+		formData.append("cat_type_id", cat_type_id);
+		formData.append("cat_diet_id", cat_diet_id);
 
-        const dietRes = await fetch("/api/categoryDiets");
-        const dietData = await dietRes.json();
-        diets = dietData.data || [];
-    }
+		await fetch("/api/food", {
+			method: "PUT",
+			body: formData
+		});
 
-    onMount(() => {
-        loadAll();
-    });
+		resetFoodForm();
+		loadFoods();
+	}
 
-    async function createFood() {
-        const formData = buildFormData();
+	async function deleteFood(id) {
+		await fetch(`/api/food?id=${id}`, {
+			method: "DELETE"
+		});
+		loadFoods();
+	}
 
-        await fetch("/api/food", {
-            method: "POST",
-            body: formData
-        });
+	function startEditFood(food) {
+		title = food.title;
+		description = food.description;
+		image_url = food.image_url;
+		price = food.price;
+		cat_time_id = food.cat_time_id;
+		cat_type_id = food.cat_type_id;
+		cat_diet_id = food.cat_diet_id;
+		editingFoodId = food.id;
+	}
 
-        clearForm();
-        loadAll();
-    }
+	function resetFoodForm() {
+		title = "";
+		description = "";
+		image_url = "";
+		price = "";
+		cat_time_id = "";
+		cat_type_id = "";
+		cat_diet_id = "";
+		editingFoodId = null;
+	}
 
-    async function updateFood() {
-        const formData = buildFormData();
-        formData.append("id", id);
+	/* =========================
+	   DIET STATE
+	========================= */
+	let diets = [];
+	let dietName = "";
+	let editingDietId = null;
 
-        await fetch("/api/food", {
-            method: "PUT",
-            body: formData
-        });
+	async function loadDiets() {
+		const res = await fetch("/api/categoryDiets");
+		const data = await res.json();
+		diets = data.data;
+	}
 
-        clearForm();
-        loadAll();
-    }
+	async function addDiet() {
+		const formData = new FormData();
+		formData.append("name", dietName);
 
-    function buildFormData() {
-        const formData = new FormData();
-        formData.append("title", title);
-        formData.append("description", description);
-        formData.append("image_url", image_url);
-        formData.append("price", price);
-        formData.append("cat_time_id", cat_time_id);
-        formData.append("cat_type_id", cat_type_id);
-        formData.append("cat_diet_id", cat_diet_id);
-        return formData;
-    }
+		await fetch("/api/categoryDiets", {
+			method: "POST",
+			body: formData
+		});
 
-    async function deleteFoodItem(foodId) {
-        await fetch(`/api/food?id=${foodId}`, {
-            method: "DELETE"
-        });
-        loadAll();
-    }
+		dietName = "";
+		loadDiets();
+	}
 
-    function editFood(food) {
-        id = food.id;
-        title = food.title;
-        description = food.description;
-        image_url = food.image_url;
-        price = food.price;
-        cat_time_id = food.cat_time_id;
-        cat_type_id = food.cat_type_id;
-        cat_diet_id = food.cat_diet_id;
-    }
+	async function updateDiet() {
+		const formData = new FormData();
+		formData.append("id", editingDietId);
+		formData.append("name", dietName);
 
-    function clearForm() {
-        id = "";
-        title = "";
-        description = "";
-        image_url = "";
-        price = "";
-        cat_time_id = "";
-        cat_type_id = "";
-        cat_diet_id = "";
-    }
+		await fetch("/api/categoryDiets", {
+			method: "PUT",
+			body: formData
+		});
+
+		dietName = "";
+		editingDietId = null;
+		loadDiets();
+	}
+
+	async function deleteDiet(id) {
+		await fetch(`/api/categoryDiets?id=${id}`, {
+			method: "DELETE"
+		});
+		loadDiets();
+	}
+
+	function startEditDiet(diet) {
+		dietName = diet.name;
+		editingDietId = diet.id;
+	}
+
+
+	/* =========================
+	   TIME STATE
+	========================= */
+	let times = [];
+	let timeName = "";
+	let editingTimeId = null;
+
+	async function loadTimes() {
+		const res = await fetch("/api/categoryTime");
+		const data = await res.json();
+		times = data.data;
+	}
+
+	async function addTime() {
+		const formData = new FormData();
+		formData.append("name", timeName);
+
+		await fetch("/api/categoryTime", {
+			method: "POST",
+			body: formData
+		});
+
+		timeName = "";
+		loadTimes();
+	}
+
+	async function updateTime() {
+		const formData = new FormData();
+		formData.append("id", editingTimeId);
+		formData.append("name", timeName);
+
+		await fetch("/api/categoryTime", {
+			method: "PUT",
+			body: formData
+		});
+
+		timeName = "";
+		editingTimeId = null;
+		loadTimes();
+	}
+
+	async function deleteTime(id) {
+		await fetch(`/api/categoryTime?id=${id}`, {
+			method: "DELETE"
+		});
+		loadTimes();
+	}
+
+	function startEditTime(time) {
+		timeName = time.name;
+		editingTimeId = time.id;
+	}
+
+
+	/* =========================
+	   TYPE STATE
+	========================= */
+	let types = [];
+	let typeName = "";
+	let editingTypeId = null;
+
+	async function loadTypes() {
+		const res = await fetch("/api/categoryType");
+		const data = await res.json();
+		types = data.data;
+	}
+
+	async function addType() {
+		const formData = new FormData();
+		formData.append("name", typeName);
+
+		await fetch("/api/categoryType", {
+			method: "POST",
+			body: formData
+		});
+
+		typeName = "";
+		loadTypes();
+	}
+
+	async function updateType() {
+		const formData = new FormData();
+		formData.append("id", editingTypeId);
+		formData.append("name", typeName);
+
+		await fetch("/api/categoryType", {
+			method: "PUT",
+			body: formData
+		});
+
+		typeName = "";
+		editingTypeId = null;
+		loadTypes();
+	}
+
+	async function deleteType(id) {
+		await fetch(`/api/categoryType?id=${id}`, {
+			method: "DELETE"
+		});
+		loadTypes();
+	}
+
+	function startEditType(type) {
+		typeName = type.name;
+		editingTypeId = type.id;
+	}
+
+	onMount(() => {
+		loadDiets();
+		loadTimes();
+		loadTypes();
+		loadFoods();
+	});
 </script>
 
-<h1>Food Test Page 🍔</h1>
 
-<h2>{id ? "Update Food" : "Create Food"}</h2>
 
-<input placeholder="Title" bind:value={title} />
-<input placeholder="Description" bind:value={description} />
-<input placeholder="Image URL" bind:value={image_url} />
-<input placeholder="Price" type="number" bind:value={price} />
 
-<!-- TIME DROPDOWN -->
-<select bind:value={cat_time_id}>
-    <option value="">Select Time</option>
-    {#each times as time}
-        <option value={time.id}>{time.name}</option>
-    {/each}
-</select>
+<!-- =========================
+     DIET SECTION
+========================= -->
 
-<!-- TYPE DROPDOWN -->
-<select bind:value={cat_type_id}>
-    <option value="">Select Type</option>
-    {#each types as type}
-        <option value={type.id}>{type.name}</option>
-    {/each}
-</select>
+<h1>Diet Categories</h1>
 
-<!-- DIET DROPDOWN -->
-<select bind:value={cat_diet_id}>
-    <option value="">Select Diet</option>
-    {#each diets as diet}
-        <option value={diet.id}>{diet.name}</option>
-    {/each}
-</select>
+<input bind:value={dietName} placeholder="Enter diet name" />
+<button on:click={addDiet}>Add</button>
+<button on:click={updateDiet}>Update</button>
 
-{#if id}
-    <button on:click={updateFood}>Update</button>
-{:else}
-    <button on:click={createFood}>Create</button>
-{/if}
+<hr />
 
-<button on:click={clearForm}>Clear</button>
+{#each diets as diet}
+	<div>
+		{diet.name}
+		<button on:click={() => startEditDiet(diet)}>Edit</button>
+		<button on:click={() => deleteDiet(diet.id)}>Delete</button>
+	</div>
+{/each}
 
-<hr>
+<hr /><hr />
 
-<h2>All Food</h2>
 
-{#each foods as food}
-    <div style="border:1px solid black; margin:10px; padding:10px;">
-        <p><strong>{food.title}</strong></p>
-        <p>{food.description}</p>
-        <p>Price: ${food.price}</p>
+<!-- =========================
+     TIME SECTION
+========================= -->
 
-        <button on:click={() => editFood(food)}>Edit</button>
-        <button on:click={() => deleteFoodItem(food.id)}>Delete</button>
-    </div>
+<h1>Time Categories</h1>
+
+<input bind:value={timeName} placeholder="Enter time name" />
+<button on:click={addTime}>Add</button>
+<button on:click={updateTime}>Update</button>
+
+<hr />
+
+{#each times as time}
+	<div>
+		{time.name}
+		<button on:click={() => startEditTime(time)}>Edit</button>
+		<button on:click={() => deleteTime(time.id)}>Delete</button>
+	</div>
+{/each}
+
+<hr /><hr />
+
+
+<!-- =========================
+     TYPE SECTION
+========================= -->
+
+<h1>Type Categories</h1>
+
+<input bind:value={typeName} placeholder="Enter type name" />
+<button on:click={addType}>Add</button>
+<button on:click={updateType}>Update</button>
+
+<hr />
+
+{#each types as type}
+	<div>
+		{type.name}
+		<button on:click={() => startEditType(type)}>Edit</button>
+		<button on:click={() => deleteType(type.id)}>Delete</button>
+	</div>
 {/each}

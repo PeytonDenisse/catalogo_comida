@@ -1,8 +1,15 @@
-import {updateCategoryDiet, deleteCategoryDiet, createCategoryDiet, getCategoriesDiet } from "$lib/models/categoryDiet";
+import {getCategoryDietById, updateCategoryDiet, deleteCategoryDiet, createCategoryDiet, getCategoriesDiet } from "$lib/models/categoryDiet";
 import { json } from "@sveltejs/kit";
 
 export async function GET(){
     const res = await getCategoriesDiet();
+    return json(res);
+}
+
+export async function GET({ url }) {
+    const id = url.searchParams.get("id");
+
+    const res = await getCategoryDietById(id);
     return json(res);
 }
 
