@@ -6,12 +6,6 @@ export async function GET(){
     return json(res);
 }
 
-export async function GET({ url }) {
-    const id = url.searchParams.get("id");
-
-    const res = await getCategoryDietById(id);
-    return json(res);
-}
 
 export async function POST({ request }){
     const data = await request.formData();

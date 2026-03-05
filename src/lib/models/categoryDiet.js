@@ -21,30 +21,30 @@ export async function getCategoriesDiet(){
 }
 
 // GET ONE (with 404 validation)
-export async function getCategoryDietById(id){
-    try {
-        const res = await query(
-            "SELECT * FROM category_diet WHERE id = ?",
-            [id]
-        );
+// export async function getCategoryDietById(id){
+//     try {
+//         const res = await query(
+//             "SELECT * FROM category_diet WHERE id = ?",
+//             [id]
+//         );
 
-        if (res.length === 0) {
-            return { 
-                success: false, 
-                message: "Category diet not found",
-                status: 404
-            };
-        }
+//         if (res.length === 0) {
+//             return { 
+//                 success: false, 
+//                 message: "Category diet not found",
+//                 status: 404
+//             };
+//         }
 
-        return { success: true, data: res[0] };
+//         return { success: true, data: res[0] };
 
-    } catch (error) {
-        return { 
-            success: false, 
-            message: "Error getting category diet" 
-        };
-    }
-}
+//     } catch (error) {
+//         return { 
+//             success: false, 
+//             message: "Error getting category diet" 
+//         };
+//     }
+// }
 
 
 // Delete
