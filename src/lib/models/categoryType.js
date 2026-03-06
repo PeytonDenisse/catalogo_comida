@@ -54,3 +54,31 @@ export async function updateCategoryType(id, name){
         return { success: false, message: "Error updating" };
     }
 }
+
+
+
+// GET ONE (with 404 validation)
+export async function getCategoryTypeById(id){
+    try {
+        const res = await query(
+            "SELECT * FROM category_type WHERE id = ?",
+            [id]
+        );
+
+        if (res.length === 0) {
+            return { 
+                success: false, 
+                message: "Category type not found",
+                status: 404
+            };
+        }
+
+        return { success: true, data: res[0] };
+
+    } catch (error) {
+        return { 
+            success: false, 
+            message: "Error getting category type" 
+        };
+    }
+}
