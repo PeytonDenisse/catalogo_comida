@@ -1,29 +1,39 @@
-/* Importamos solo los grosores (weights) que realmente vas a usar para mejorar el tiempo de carga */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+/* Importamos las fuentes: Montserrat para títulos fuertes, Poppins para descripciones suaves */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@300;400;500;600&display=swap');
 
 :root {
-  /* Variables CSS para facilitar el mantenimiento */
-  --bg-color: #1a1a1a;
-  --text-color: rgba(255, 255, 255, 0.87);
-  --font-body: 'Poppins', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* ==========================================
+     PALETA DE COLORES (Estilo Gastronómico)
+     ========================================== */
+  /* Colores principales cálidos y apetitosos */
+  --color-primary: #E63946;    /* Rojo tomate: Ideal para botones de "Agregar" o "Pedir" */
+  --color-secondary: #F4A261;  /* Naranja cálido: Excelente para destacar precios u ofertas */
+  --color-accent: #2A9D8F;     /* Verde fresco: Perfecto para etiquetas "Saludable" o "Vegano" */
+  
+  /* Fondos y textos */
+  --bg-color: #F8F9FA;         /* Blanco roto/crema: Más amigable a la vista que el blanco puro */
+  --surface-color: #FFFFFF;    /* Blanco puro: Para el fondo de las tarjetas de los platillos */
+  --text-main: #2B2D42;        /* Gris oscuro/Pizarra: Para títulos (más elegante que el negro puro) */
+  --text-muted: #6C757D;       /* Gris medio: Para descripciones de ingredientes */
+
+  /* ==========================================
+     TIPOGRAFÍA Y ESTRUCTURA
+     ========================================== */
+  --font-body: 'Poppins', system-ui, sans-serif;
   --font-heading: 'Montserrat', system-ui, sans-serif;
 
-  /* Aplicamos la variable de la fuente para el cuerpo del texto */
-  font-family: var(--font-body);
-  line-height: 1.6;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: var(--text-color);
-  background-color: var(--bg-color);
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* ==========================================
+     EFECTOS Y ESPACIADOS (Bordes suaves)
+     ========================================== */
+  --radius-sm: 8px;
+  --radius-md: 16px;           /* Bordes redondeados dan una sensación más amigable y moderna */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-/* Reset universal: Fundamental para que el padding no deforme el tamaño de las cajas */
+/* ==========================================
+   RESETEO GLOBAL
+   ========================================== */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -31,16 +41,53 @@
 }
 
 body {
-  /* Asegura que el body siempre ocupe al menos el alto completo de la pantalla */
+  font-family: var(--font-body);
+  color: var(--text-main);
+  background-color: var(--bg-color);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
   min-height: 100vh;
-  /* Opcional: Ayuda si el contenido no llena la pantalla y quieres un footer abajo */
-  display: flex;
-  flex-direction: column; 
 }
 
-/* Aplicamos Montserrat específicamente a los títulos para crear contraste con Poppins */
+/* Estilo para los nombres de los platillos y categorías */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  font-weight: 600;
-  line-height: 1.2;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px; /* Junta un poquito las letras para un look más profesional */
+}
+
+/* ==========================================
+   CLASES BASE PARA EL CATÁLOGO (Opcionales pero útiles)
+   ========================================== */
+
+/* Contenedor principal que centra tu contenido */
+.catalog-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Cuadrícula para acomodar los platillos automáticamente en cualquier pantalla */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+/* Estilo base para las "tarjetas" de cada comida */
+.food-card {
+  background-color: var(--surface-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto flotante cuando el usuario pasa el mouse por un platillo */
+.food-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
 }
