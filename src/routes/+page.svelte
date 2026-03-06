@@ -4,7 +4,7 @@
 
 <main class="home">
 
-    <h1>🍔 Catálogo de Comida</h1>
+    <h1>🍔 Dynamic Food</h1>
 
     <p>Explora nuestro catálogo de alimentos.</p>
 
