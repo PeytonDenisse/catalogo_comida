@@ -1,20 +1,28 @@
 <script>
+    import { Search } from "@lucide/svelte";
+
   export let data;
 </script>
 
-<main class="wrap">
-  <header class="hero">
-    <div class="hero-text">
-      <h1>Catálogo de comida</h1>
-      <p>Encuentra tus platillos favoritos y descubre opciones deliciosas para cualquier momento.</p>
-    </div>
+<svelte:head>
+  <title>Catalogo | Dynamic Food</title>
+</svelte:head>
 
-    <a class="admin-btn" href="/login">Admin</a>
+<main class="wrap">
+  <header class="main-banner">
+    <div class="text-banner">
+      <h1>Dynamic Food</h1>
+    </div>
   </header>
+
+  <div class="cont-search">
+    <input type="text" placeholder="Buscar una comida">
+    <button><Search size={16} /></button>
+  </div>
 
   <section class="grid">
     {#each data.foods as f}
-      <article class="card">
+      <a href='/foods/{f.id}' class="card">
         <div class="img">
           {#if f.image_url}
             <img src={f.image_url} alt={f.title} />
@@ -33,7 +41,7 @@
             <span class="price">${f.price}</span>
           </div>
         </div>
-      </article>
+      </a>
     {:else}
       <div class="empty-box">
         <div class="empty-icon">🍽️</div>
@@ -134,6 +142,7 @@
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
     border: 1px solid #ffe8db;
     transition: transform 0.18s ease, box-shadow 0.18s ease;
+    text-decoration: unset;
   }
 
   .card:hover {
@@ -240,4 +249,69 @@
       box-sizing: border-box;
     }
   }
+  .cont-search{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 16px;
+    gap: 2px;
+
+    input{
+      height: 35px;
+      width: 95%;
+      box-sizing: border-box;
+      border: 1px solid grey;
+      background: unset;
+      color: #fff;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+
+    button{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 35px;
+      width: 5%;
+      box-sizing: border-box;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      border: 1px solid rgb(39, 39, 148);
+      color: #fff;
+      background-color: rgb(39, 39, 148);
+    }
+  }
+
+  .main-banner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    width: 100%;
+    margin-bottom: 32px;
+    color: #fff;
+
+    background-image: url(https://images.pexels.com/photos/3023476/pexels-photo-3023476.jpeg);
+    background-size: cover;
+    background-position: 0 700px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    
+    .text-banner{
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.4);
+
+      h1{ color: #fff; }
+    }
+  }
+
 </style>

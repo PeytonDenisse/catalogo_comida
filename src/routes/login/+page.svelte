@@ -69,8 +69,7 @@
 </main>
 
 <style>
-    :global(body) { margin: 0; font-family: system-ui; }
-    main { min-height: 100dvh; display:flex; justify-content:center; align-items:center; background:#121212; padding: 1rem; }
+    main { min-height: 100dvh; display:flex; justify-content:center; align-items:center; background:#151320; padding: 1rem; }
     form { width: 100%; max-width: 400px; background:#1e1e1e; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.4); display:flex; flex-direction:column; gap: 1rem; }
     h2 { color: white; margin: 0; text-align:center; }
     .input-group { display:flex; flex-direction:column; gap:.4rem; }

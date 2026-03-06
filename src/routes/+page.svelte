@@ -7,28 +7,26 @@
     <div class="blob blob2"></div>
     <div class="blob blob3"></div>
 
-    <section class="card">
-
-
+    <section>
+        <h1>🍔 Dynamic Food</h1>
         <h1 class="title">
             Catálogo de Comida
         </h1>
-
         <p class="subtitle">
             Encuentra comida deliciosa por tipo, dieta y horario.
             Todo en un solo lugar y de forma súper fácil.
         </p>
-
         <div class="buttons">
             <button class="primary" on:click={() => goto("/foods")}>
                 Ver catálogo
             </button>
-
+    
             <button class="secondary" on:click={() => goto("/login")}>
                 Panel admin
             </button>
         </div>
     </section>
+
 </main>
 
 <style>
