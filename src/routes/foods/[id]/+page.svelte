@@ -24,7 +24,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100dch;
+    min-height: 100dvh;
   }
 
   .main-banner{

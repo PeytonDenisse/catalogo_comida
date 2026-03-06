@@ -44,7 +44,12 @@ export async function getFoodById(id){
             [id]
         );
 
-        return { success: true, data: res };
+        if(res.length > 0){
+            return { success: true, data: res };
+        }else{
+            return { success: false, message: 'prod_not_found' };
+        }
+
     } catch (error) {
         return { success: false, message: "Error getting food" };
     }
