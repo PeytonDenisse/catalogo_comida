@@ -1,21 +1,93 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* Importamos las fuentes: Montserrat para títulos fuertes, Poppins para descripciones suaves */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@300;400;500;600&display=swap');
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* ==========================================
+     PALETA DE COLORES (Estilo Gastronómico)
+     ========================================== */
+  /* Colores principales cálidos y apetitosos */
+  --color-primary: #E63946;    /* Rojo tomate: Ideal para botones de "Agregar" o "Pedir" */
+  --color-secondary: #F4A261;  /* Naranja cálido: Excelente para destacar precios u ofertas */
+  --color-accent: #2A9D8F;     /* Verde fresco: Perfecto para etiquetas "Saludable" o "Vegano" */
+  
+  /* Fondos y textos */
+  --bg-color: #F8F9FA;         /* Blanco roto/crema: Más amigable a la vista que el blanco puro */
+  --surface-color: #FFFFFF;    /* Blanco puro: Para el fondo de las tarjetas de los platillos */
+  --text-main: #2B2D42;        /* Gris oscuro/Pizarra: Para títulos (más elegante que el negro puro) */
+  --text-muted: #6C757D;       /* Gris medio: Para descripciones de ingredientes */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* ==========================================
+     TIPOGRAFÍA Y ESTRUCTURA
+     ========================================== */
+  --font-body: 'Poppins', system-ui, sans-serif;
+  --font-heading: 'Montserrat', system-ui, sans-serif;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* ==========================================
+     EFECTOS Y ESPACIADOS (Bordes suaves)
+     ========================================== */
+  --radius-sm: 8px;
+  --radius-md: 16px;           /* Bordes redondeados dan una sensación más amigable y moderna */
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-body{
-    padding: 0;
-    margin: 0;
+/* ==========================================
+   RESETEO GLOBAL
+   ========================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-main);
+  background-color: var(--bg-color);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Estilo para los nombres de los platillos y categorías */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px; /* Junta un poquito las letras para un look más profesional */
+}
+
+/* ==========================================
+   CLASES BASE PARA EL CATÁLOGO (Opcionales pero útiles)
+   ========================================== */
+
+/* Contenedor principal que centra tu contenido */
+.catalog-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Cuadrícula para acomodar los platillos automáticamente en cualquier pantalla */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+/* Estilo base para las "tarjetas" de cada comida */
+.food-card {
+  background-color: var(--surface-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto flotante cuando el usuario pasa el mouse por un platillo */
+.food-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
 }

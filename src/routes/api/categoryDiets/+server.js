@@ -1,10 +1,11 @@
-import {updateCategoryDiet, deleteCategoryDiet, createCategoryDiet, getCategoriesDiet } from "$lib/models/categoryDiet";
+import {getCategoryDietById, updateCategoryDiet, deleteCategoryDiet, createCategoryDiet, getCategoriesDiet } from "$lib/models/categoryDiet";
 import { json } from "@sveltejs/kit";
 
 export async function GET(){
     const res = await getCategoriesDiet();
     return json(res);
 }
+
 
 export async function POST({ request }){
     const data = await request.formData();
