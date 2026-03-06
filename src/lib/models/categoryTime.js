@@ -54,3 +54,31 @@ export async function updateCategoryTime(id, name){
         return { success: false, message: "Error updating" };
     }
 }
+
+
+
+// GET ONE (with 404 validation)
+export async function getCategoryTimeById(id){
+    try {
+        const res = await query(
+            "SELECT * FROM category_time WHERE id = ?",
+            [id]
+        );
+
+        if (res.length === 0) {
+            return { 
+                success: false, 
+                message: "Category time not found",
+                status: 404
+            };
+        }
+
+        return { success: true, data: res[0] };
+
+    } catch (error) {
+        return { 
+            success: false, 
+            message: "Error getting category time" 
+        };
+    }
+}
