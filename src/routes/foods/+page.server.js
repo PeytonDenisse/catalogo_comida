@@ -1,8 +1,5 @@
-import { getAllFood } from "$lib/models/food";
-
-export async function load(){
-    const foods = await getAllFood();
-
-
-    return {foods: foods.data}
+export async function load({ fetch }) {
+  const res = await fetch("/api/food");
+  const data = await res.json();
+  return { foods: data.data || [] };
 }
