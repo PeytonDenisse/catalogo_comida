@@ -1,17 +1,15 @@
 <script>
   import { onMount } from "svelte";
-  export let data; // viene de +layout.server.js
+  export let data;
 
   let loading = false;
   let error = "";
 
-  // LISTAS
   let diets = [];
   let times = [];
   let types = [];
   let foods = [];
 
-  // FORM CATEGORIES
   let dietName = "";
   let timeName = "";
   let typeName = "";
@@ -20,7 +18,6 @@
   let editingTimeId = null;
   let editingTypeId = null;
 
-  // FORM FOOD
   let foodEditingId = null;
   let title = "";
   let description = "";
@@ -64,7 +61,6 @@
     return confirm(`¿Seguro que quieres eliminar: ${label}?`);
   }
 
-  // ===== CRUD TYPES =====
   async function saveType() {
     error = "";
     const formData = new FormData();
@@ -94,24 +90,27 @@
     await loadAll();
   }
 
-  // ===== CRUD DIETS =====
   async function saveDiet() {
     error = "";
     const formData = new FormData();
     formData.append("name", dietName);
 
-    if (!dietName.trim()) return;
+    try {
+      if (!dietName.trim()) return;
 
-    if (editingDietId) {
-      formData.append("id", editingDietId);
-      await fetch("/api/categoryDiets", { method: "PUT", body: formData });
-    } else {
-      await fetch("/api/categoryDiets", { method: "POST", body: formData });
+      if (editingDietId) {
+        formData.append("id", editingDietId);
+        await fetch("/api/categoryDiets", { method: "PUT", body: formData });
+      } else {
+        await fetch("/api/categoryDiets", { method: "POST", body: formData });
+      }
+
+      dietName = "";
+      editingDietId = null;
+      await loadAll();
+    } catch {
+      error = "No se pudo guardar la dieta";
     }
-
-    dietName = "";
-    editingDietId = null;
-    await loadAll();
   }
 
   async function deleteDiet(id, label) {
@@ -120,24 +119,27 @@
     await loadAll();
   }
 
-  // ===== CRUD TIMES =====
   async function saveTime() {
     error = "";
     const formData = new FormData();
     formData.append("name", timeName);
 
-    if (!timeName.trim()) return;
+    try {
+      if (!timeName.trim()) return;
 
-    if (editingTimeId) {
-      formData.append("id", editingTimeId);
-      await fetch("/api/categoryTime", { method: "PUT", body: formData });
-    } else {
-      await fetch("/api/categoryTime", { method: "POST", body: formData });
+      if (editingTimeId) {
+        formData.append("id", editingTimeId);
+        await fetch("/api/categoryTime", { method: "PUT", body: formData });
+      } else {
+        await fetch("/api/categoryTime", { method: "POST", body: formData });
+      }
+
+      timeName = "";
+      editingTimeId = null;
+      await loadAll();
+    } catch {
+      error = "No se pudo guardar el horario";
     }
-
-    timeName = "";
-    editingTimeId = null;
-    await loadAll();
   }
 
   async function deleteTime(id, label) {
@@ -146,7 +148,6 @@
     await loadAll();
   }
 
-  // ===== CRUD FOODS =====
   function fillFoodForm(food) {
     foodEditingId = food.id;
     title = food.title;
@@ -172,10 +173,11 @@
   async function saveFood() {
     error = "";
 
-    // validaciones simples
     if (!title.trim()) return (error = "El título es obligatorio");
     if (!price || isNaN(Number(price))) return (error = "Precio inválido");
-    if (!cat_time_id || !cat_type_id || !cat_diet_id) return (error = "Selecciona Time/Type/Diet");
+    if (!cat_time_id || !cat_type_id || !cat_diet_id) {
+      return (error = "Selecciona horario, tipo y dieta");
+    }
 
     const formData = new FormData();
     formData.append("title", title);
@@ -207,16 +209,20 @@
 </script>
 
 <main class="wrap">
-  <header class="top">
-    <div>
-      <h1>Panel Admin 🍽️</h1>
-      <p class="sub">Bienvenido, {data.user.username} ({data.user.email})</p>
+  <header class="hero">
+    <div class="hero-text">
+      <span class="badge">Panel de administración</span>
+      <h1>Administra tu catálogo 🍽️</h1>
+      <p class="sub">
+        Bienvenido, <strong>{data.user.username}</strong> · {data.user.email}
+      </p>
     </div>
+
     <div class="right">
-      <button class="btn ghost" on:click={loadAll} disabled={loading}>
+      <button class="btn btn-light" on:click={loadAll} disabled={loading}>
         {loading ? "Actualizando..." : "Refrescar"}
       </button>
-      <a class="btn" href="/foods">Ver catálogo</a>
+      <a class="btn btn-primary" href="/foods">Ver catálogo</a>
     </div>
   </header>
 
@@ -224,78 +230,130 @@
     <div class="error">{error}</div>
   {/if}
 
-  <!-- ====== CATEGORIES ====== -->
   <section class="grid3">
-    <div class="card">
-      <h2>Types</h2>
+    <div class="panel-card">
+      <div class="section-head">
+        <h2>Tipos</h2>
+        <span class="counter">{types.length}</span>
+      </div>
+
       <div class="row">
         <input placeholder="Ej: Mexicana" bind:value={typeName} />
-        <button class="btn" on:click={saveType}>{editingTypeId ? "Actualizar" : "Agregar"}</button>
+        <button class="btn btn-primary" on:click={saveType}>
+          {editingTypeId ? "Actualizar" : "Agregar"}
+        </button>
       </div>
 
       <div class="list">
         {#each types as t}
           <div class="item">
-            <span>{t.name}</span>
+            <span class="item-name">{t.name}</span>
             <div class="actions">
-              <button class="btn sm ghost" on:click={() => { typeName = t.name; editingTypeId = t.id; }}>Editar</button>
-              <button class="btn sm danger" on:click={() => deleteType(t.id, t.name)}>Eliminar</button>
+              <button
+                class="btn btn-soft sm"
+                on:click={() => {
+                  typeName = t.name;
+                  editingTypeId = t.id;
+                }}
+              >
+                Editar
+              </button>
+              <button class="btn btn-danger sm" on:click={() => deleteType(t.id, t.name)}>
+                Eliminar
+              </button>
             </div>
           </div>
         {:else}
-          <p class="muted">No hay types</p>
+          <p class="muted">No hay tipos</p>
         {/each}
       </div>
     </div>
 
-    <div class="card">
-      <h2>Diets</h2>
+    <div class="panel-card">
+      <div class="section-head">
+        <h2>Dietas</h2>
+        <span class="counter">{diets.length}</span>
+      </div>
+
       <div class="row">
         <input placeholder="Ej: Vegana" bind:value={dietName} />
-        <button class="btn" on:click={saveDiet}>{editingDietId ? "Actualizar" : "Agregar"}</button>
+        <button class="btn btn-primary" on:click={saveDiet}>
+          {editingDietId ? "Actualizar" : "Agregar"}
+        </button>
       </div>
 
       <div class="list">
         {#each diets as d}
           <div class="item">
-            <span>{d.name}</span>
+            <span class="item-name">{d.name}</span>
             <div class="actions">
-              <button class="btn sm ghost" on:click={() => { dietName = d.name; editingDietId = d.id; }}>Editar</button>
-              <button class="btn sm danger" on:click={() => deleteDiet(d.id, d.name)}>Eliminar</button>
+              <button
+                class="btn btn-soft sm"
+                on:click={() => {
+                  dietName = d.name;
+                  editingDietId = d.id;
+                }}
+              >
+                Editar
+              </button>
+              <button class="btn btn-danger sm" on:click={() => deleteDiet(d.id, d.name)}>
+                Eliminar
+              </button>
             </div>
           </div>
         {:else}
-          <p class="muted">No hay diets</p>
+          <p class="muted">No hay dietas</p>
         {/each}
       </div>
     </div>
 
-    <div class="card">
-      <h2>Times</h2>
+    <div class="panel-card">
+      <div class="section-head">
+        <h2>Horarios</h2>
+        <span class="counter">{times.length}</span>
+      </div>
+
       <div class="row">
         <input placeholder="Ej: Desayuno" bind:value={timeName} />
-        <button class="btn" on:click={saveTime}>{editingTimeId ? "Actualizar" : "Agregar"}</button>
+        <button class="btn btn-primary" on:click={saveTime}>
+          {editingTimeId ? "Actualizar" : "Agregar"}
+        </button>
       </div>
 
       <div class="list">
         {#each times as t}
           <div class="item">
-            <span>{t.name}</span>
+            <span class="item-name">{t.name}</span>
             <div class="actions">
-              <button class="btn sm ghost" on:click={() => { timeName = t.name; editingTimeId = t.id; }}>Editar</button>
-              <button class="btn sm danger" on:click={() => deleteTime(t.id, t.name)}>Eliminar</button>
+              <button
+                class="btn btn-soft sm"
+                on:click={() => {
+                  timeName = t.name;
+                  editingTimeId = t.id;
+                }}
+              >
+                Editar
+              </button>
+              <button class="btn btn-danger sm" on:click={() => deleteTime(t.id, t.name)}>
+                Eliminar
+              </button>
             </div>
           </div>
         {:else}
-          <p class="muted">No hay times</p>
+          <p class="muted">No hay horarios</p>
         {/each}
       </div>
     </div>
   </section>
 
-  <!-- ====== FOODS ====== -->
-  <section class="card big">
-    <h2>Foods</h2>
+  <section class="foods-section">
+    <div class="section-top">
+      <div>
+        <span class="badge badge-dark">Gestión de productos</span>
+        <h2>Comidas</h2>
+      </div>
+      <span class="counter">{foods.length} elementos</span>
+    </div>
 
     <div class="foodForm">
       <div class="row2">
@@ -305,25 +363,25 @@
 
       <textarea placeholder="Descripción" bind:value={description}></textarea>
 
-      <div class="row2">
+      <div class="row2 four">
         <input type="number" placeholder="Precio" bind:value={price} />
 
         <select bind:value={cat_time_id}>
-          <option value="">Time</option>
+          <option value="">Horario</option>
           {#each times as t}
             <option value={t.id}>{t.name}</option>
           {/each}
         </select>
 
         <select bind:value={cat_type_id}>
-          <option value="">Type</option>
+          <option value="">Tipo</option>
           {#each types as t}
             <option value={t.id}>{t.name}</option>
           {/each}
         </select>
 
         <select bind:value={cat_diet_id}>
-          <option value="">Diet</option>
+          <option value="">Dieta</option>
           {#each diets as d}
             <option value={d.id}>{d.name}</option>
           {/each}
@@ -331,91 +389,472 @@
       </div>
 
       <div class="row end">
-        <button class="btn ghost" on:click={clearFoodForm} disabled={loading}>Limpiar</button>
-        <button class="btn" on:click={saveFood} disabled={loading}>
-          {foodEditingId ? "Actualizar Food" : "Crear Food"}
+        <button class="btn btn-soft" on:click={clearFoodForm} disabled={loading}>
+          Limpiar
+        </button>
+        <button class="btn btn-primary" on:click={saveFood} disabled={loading}>
+          {foodEditingId ? "Actualizar comida" : "Crear comida"}
         </button>
       </div>
     </div>
 
     <div class="foodsGrid">
       {#each foods as f}
-        <div class="foodCard">
+        <article class="foodCard">
           <div class="img">
             {#if f.image_url}
               <img src={f.image_url} alt={f.title} />
             {:else}
-              <div class="noimg">Sin imagen</div>
+              <div class="noimg">🍽️ Sin imagen</div>
             {/if}
           </div>
+
           <div class="info">
-            <h3>{f.title}</h3>
+            <div class="foodTop">
+              <h3>{f.title}</h3>
+              <span class="price">${f.price}</span>
+            </div>
+
             <p class="desc">{f.description}</p>
-            <p class="price">${f.price}</p>
 
             <div class="actions">
-              <button class="btn sm ghost" on:click={() => fillFoodForm(f)}>Editar</button>
-              <button class="btn sm danger" on:click={() => deleteFood(f.id, f.title)}>Eliminar</button>
+              <button class="btn btn-soft sm" on:click={() => fillFoodForm(f)}>
+                Editar
+              </button>
+              <button class="btn btn-danger sm" on:click={() => deleteFood(f.id, f.title)}>
+                Eliminar
+              </button>
             </div>
           </div>
-        </div>
+        </article>
       {:else}
-        <p class="muted">No hay foods</p>
+        <p class="muted">No hay comidas</p>
       {/each}
     </div>
   </section>
 </main>
 
 <style>
-  :global(body){ margin:0; background:#0f0f0f; color:white; font-family: system-ui; }
-  .wrap{ max-width:1200px; margin:0 auto; padding: 2rem; display:flex; flex-direction:column; gap: 1.5rem; }
-  .top{ display:flex; justify-content:space-between; align-items:flex-start; gap: 1rem; flex-wrap:wrap; }
-  h1{ margin:0; }
-  .sub{ margin:.3rem 0 0; color:#9aa0a6; }
-  .right{ display:flex; gap:.6rem; align-items:center; }
-  .error{ background: rgba(255,70,70,.12); border: 1px solid rgba(255,70,70,.35); padding: .8rem 1rem; border-radius: 12px; color:#ff6b6b; }
-
-  .grid3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-  @media (max-width: 1000px){ .grid3{ grid-template-columns: 1fr; } }
-
-  .card{ background:#141414; border:1px solid #222; border-radius: 16px; padding: 1rem; }
-  .big{ padding: 1.2rem; }
-  .row{ display:flex; gap:.6rem; margin:.8rem 0; }
-  .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:.6rem; }
-  @media (max-width: 700px){ .row2{ grid-template-columns: 1fr; } }
-  .end{ justify-content:flex-end; }
-
-  input, select, textarea{
-    width:100%; padding:.8rem 1rem; border-radius: 12px;
-    border:1px solid #2a2a2a; background:#1b1b1b; color:white;
-    outline:none;
+  :global(body) {
+    margin: 0;
+    background: linear-gradient(135deg, #15121f 0%, #111827 50%, #0f172a 100%);
+    color: #f8fafc;
+    font-family: "Segoe UI", system-ui, sans-serif;
   }
-  textarea{ min-height: 90px; resize: vertical; }
 
-  .btn{
-    background:#646cff; border:none; color:white;
-    padding:.8rem 1rem; border-radius: 12px;
-    font-weight:700; cursor:pointer;
+  .wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
   }
-  .btn:disabled{ opacity:.6; cursor:not-allowed; }
-  .ghost{ background: #1b1b1b; border: 1px solid #2a2a2a; }
-  .danger{ background: #ff3b3b; }
-  .sm{ padding:.45rem .7rem; border-radius: 10px; font-size: .85rem; }
 
-  .list{ display:flex; flex-direction:column; gap:.6rem; }
-  .item{ display:flex; justify-content:space-between; align-items:center; background:#111; border:1px solid #222; padding:.7rem .9rem; border-radius: 12px; }
-  .actions{ display:flex; gap:.5rem; }
+  .hero{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
 
-  .foodForm{ display:flex; flex-direction:column; gap:.6rem; margin: .8rem 0 1.2rem; }
-  .foodsGrid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    padding: 1.6rem 1.8rem;
+    border-radius: 22px;
 
-  .foodCard{ border:1px solid #222; border-radius: 16px; overflow:hidden; background:#101010; }
-  .img{ height: 160px; background:#0b0b0b; display:flex; align-items:center; justify-content:center; }
-  img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .noimg{ color:#666; }
-  .info{ padding: .9rem; display:flex; flex-direction:column; gap:.3rem; }
-  h3{ margin:0; }
-  .desc{ color:#b3b3b3; font-size:.9rem; min-height: 38px; }
-  .price{ font-weight:800; margin:.2rem 0 .4rem; }
-  .muted{ color:#777; margin: .5rem 0; }
+    background: linear-gradient(135deg,#f4efec,#ece6e2);
+    border: 1px solid #d4cbc5;
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  }
+
+  .hero-text {
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .badge{
+    background:#dcd4ff;
+    color:#5b21b6;
+    border:none;
+  }
+
+  .badge-dark {
+    background: #ddd6fe;
+    color: #5b21b6;
+    border: none;
+  }
+
+  h1{
+    margin: 0;
+    color: #1f2937;
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    line-height: 1.1;
+    font-weight: 800;
+  }
+
+  .sub{
+    margin: 0.6rem 0 0;
+    font-size: 1rem;
+    color:#374151;
+    font-weight:600;
+  }
+
+  .sub strong{
+    color:#111827;
+    font-weight:800;
+  }
+
+  .right {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .error {
+    background: #3b1d24;
+    border: 1px solid #7f1d1d;
+    color: #fecaca;
+    padding: 0.95rem 1rem;
+    border-radius: 14px;
+    font-weight: 600;
+  }
+
+  .grid3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+
+  .panel-card,
+  .foods-section {
+    background: #e6dfdb;
+    color: #1f2937;
+    border-radius: 22px;
+    padding: 1rem;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid #d4cbc5;
+  }
+
+  .section-head,
+  .section-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .section-head h2,
+  .section-top h2 {
+    margin: 0;
+    color: #1f2544;
+    font-size: 1.25rem;
+    font-weight: 800;
+  }
+
+  .counter {
+    background: #dcd4ff;
+    color: #5b21b6;
+    border-radius: 999px;
+    padding: 0.36rem 0.72rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .row {
+    display: flex;
+    gap: 0.65rem;
+    margin: 0.9rem 0 1rem;
+  }
+
+  .row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+  }
+
+  .row2.four {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .end {
+    justify-content: flex-end;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.9rem;
+    border-radius: 14px;
+    background: #dcd5d1;
+    border: 1px solid #cbc1bb;
+  }
+
+  .item-name {
+    color: #253047;
+    font-weight: 700;
+    line-height: 1.35;
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .muted {
+    color: #6f7687;
+    margin: 0.4rem 0;
+    font-weight: 600;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border-radius: 14px;
+    border: 1px solid #c9c0bb;
+    background: #f4efec;
+    color: #172033;
+    outline: none;
+    box-sizing: border-box;
+    font-size: 0.96rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #7d8393;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+    background: #f8f5f3;
+  }
+
+  .btn {
+    border: none;
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #6d5dfc, #7c3aed);
+    color: white;
+    box-shadow: 0 8px 18px rgba(109, 93, 252, 0.18);
+  }
+
+  .btn-light{
+    background:#ffffff;
+    color:#111827;
+    border:1px solid #cfc7c2;
+    font-weight:700;
+  }
+
+  .btn-light:hover{
+    background:#f3f4f6;
+  }
+
+  .btn-soft {
+    background: #d4ccc7;
+    color: #394150;
+    border: 1px solid #bfb6b0;
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+  }
+
+  .sm {
+    padding: 0.48rem 0.76rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .foodForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin: 0.8rem 0 1.2rem;
+  }
+
+  .foodsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .foodCard {
+    border-radius: 18px;
+    overflow: hidden;
+    background: #ddd6d2;
+    border: 1px solid #c9c0bb;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+
+  .foodCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+  }
+
+  .img {
+    height: 170px;
+    background: #cfc7c2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .noimg {
+    color: #5f6878;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .info {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .foodTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  h3 {
+    margin: 0;
+    color: #162033;
+    font-size: 1.08rem;
+    font-weight: 800;
+  }
+
+  .desc {
+    color: #586173;
+    font-size: 0.93rem;
+    min-height: 42px;
+    line-height: 1.48;
+    margin: 0;
+  }
+
+  .price {
+    white-space: nowrap;
+    background: #f6dccf;
+    color: #d65a12;
+    padding: 0.36rem 0.72rem;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 0.9rem;
+  }
+
+  textarea {
+    min-height: 105px;
+    resize: vertical;
+  }
+
+  @media (max-width: 1000px) {
+    .grid3 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .row2,
+    .row2.four {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .wrap {
+      padding: 1rem;
+    }
+
+    .hero {
+      padding: 1.2rem;
+    }
+
+    .right {
+      width: 100%;
+    }
+
+    .right .btn {
+      flex: 1;
+      text-align: center;
+    }
+
+    .row {
+      flex-direction: column;
+    }
+
+    @media (max-width: 640px) {
+      .item {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .actions {
+        width: 100%;
+        justify-content: stretch;
+      }
+
+      .actions .btn {
+        flex: 1;
+        text-align: center;
+      }
+    }
+
+    .foodTop {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
 </style>
