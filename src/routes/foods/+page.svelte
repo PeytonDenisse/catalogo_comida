@@ -1,7 +1,13 @@
 <script>
     import { Search } from "@lucide/svelte";
 
-  export let data;
+    export let data;
+
+    let search = "";
+    let foodsFiltered = [];
+    $: foodsFiltered = data.foods.filter(f =>
+        f.title.toLowerCase().includes(search.toLowerCase())
+    );
 </script>
 
 <svelte:head>
@@ -16,12 +22,12 @@
   </header>
 
   <div class="cont-search">
-    <input type="text" placeholder="Buscar una comida">
+    <input type="text" placeholder="Buscar una comida" bind:value={search}>
     <button><Search size={16} /></button>
   </div>
 
   <section class="grid">
-    {#each data.foods as f}
+    {#each foodsFiltered as f}
       <a href='/foods/{f.id}' class="card">
         <div class="img">
           {#if f.image_url}
