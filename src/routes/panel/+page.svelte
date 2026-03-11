@@ -1,5 +1,7 @@
 <script>
   import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+
   export let data;
 
   let loading = false;
@@ -59,6 +61,10 @@
 
   function confirmDelete(label) {
     return confirm(`¿Seguro que quieres eliminar: ${label}?`);
+  }
+
+  function handleLogout() {
+    goto("/");
   }
 
   async function saveType() {
@@ -210,19 +216,26 @@
 
 <main class="wrap">
   <header class="hero">
-    <div class="hero-text">
+    <div class="hero-left">
       <span class="badge">Panel de administración</span>
-      <h1>Administra tu catálogo 🍽️</h1>
+      <h1>Administra tu catálogo</h1>
       <p class="sub">
-        Bienvenido, <strong>{data.user.username}</strong> · {data.user.email}
+        Bienvenido, <strong>{data.user.username}</strong>
+        <span class="dot">•</span>
+        <span>{data.user.email}</span>
       </p>
     </div>
 
-    <div class="right">
+    <div class="hero-actions">
       <button class="btn btn-light" on:click={loadAll} disabled={loading}>
         {loading ? "Actualizando..." : "Refrescar"}
       </button>
+
       <a class="btn btn-primary" href="/foods">Ver catálogo</a>
+
+      <button class="btn btn-danger-soft" on:click={handleLogout}>
+        Cerrar sesión
+      </button>
     </div>
   </header>
 
@@ -451,64 +464,81 @@
     gap: 1.4rem;
   }
 
-  .hero{
+  .hero {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
+    align-items: center;
+    gap: 1.2rem;
     flex-wrap: wrap;
-
-    padding: 1.6rem 1.8rem;
-    border-radius: 22px;
-
-    background: linear-gradient(135deg,#f4efec,#ece6e2);
+    padding: 1.5rem 1.7rem;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #f4efec, #ece6e2);
     border: 1px solid #d4cbc5;
-
-    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
   }
 
-  .hero-text {
+  .hero-left {
     flex: 1;
     min-width: 260px;
   }
 
-  .badge{
-    background:#dcd4ff;
-    color:#5b21b6;
-    border:none;
+  .badge {
+    display: inline-block;
+    padding: 0.38rem 0.82rem;
+    border-radius: 999px;
+    background: #dcd4ff;
+    color: #5b21b6;
+    font-size: 0.86rem;
+    font-weight: 800;
+    border: none;
+    margin-bottom: 0.65rem;
   }
 
   .badge-dark {
     background: #ddd6fe;
     color: #5b21b6;
-    border: none;
   }
 
-  h1{
+  h1 {
     margin: 0;
     color: #1f2937;
-    font-size: clamp(2rem, 4vw, 2.6rem);
-    line-height: 1.1;
+    font-size: clamp(2rem, 4vw, 2.7rem);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .sub {
+    margin: 0.65rem 0 0;
+    font-size: 1rem;
+    color: #374151;
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+  }
+
+  .sub strong {
+    color: #111827;
     font-weight: 800;
   }
 
-  .sub{
-    margin: 0.6rem 0 0;
-    font-size: 1rem;
-    color:#374151;
-    font-weight:600;
+  .dot {
+    opacity: 0.6;
   }
 
-  .sub strong{
-    color:#111827;
-    font-weight:800;
-  }
-
-  .right {
+  .hero-actions {
     display: flex;
     gap: 0.7rem;
     align-items: center;
     flex-wrap: wrap;
+  }
+
+  .hero-actions .btn {
+    min-width: 126px;
+    text-align: center;
+    justify-content: center;
   }
 
   .error {
@@ -560,6 +590,7 @@
     padding: 0.36rem 0.72rem;
     font-size: 0.82rem;
     font-weight: 800;
+    white-space: nowrap;
   }
 
   .row {
@@ -656,7 +687,9 @@
     font-weight: 800;
     cursor: pointer;
     text-decoration: none;
-    transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease;
+    transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    display: inline-flex;
+    align-items: center;
   }
 
   .btn:hover {
@@ -674,15 +707,20 @@
     box-shadow: 0 8px 18px rgba(109, 93, 252, 0.18);
   }
 
-  .btn-light{
-    background:#ffffff;
-    color:#111827;
-    border:1px solid #cfc7c2;
-    font-weight:700;
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #7b6cff, #8a5cf6);
+    color: white;
   }
 
-  .btn-light:hover{
-    background:#f3f4f6;
+  .btn-light {
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid #cfc7c2;
+    font-weight: 700;
+  }
+
+  .btn-light:hover {
+    background: #f3f4f6;
   }
 
   .btn-soft {
@@ -691,21 +729,35 @@
     border: 1px solid #bfb6b0;
   }
 
+  .btn-soft:hover {
+    background: #cec5c0;
+  }
+
   .btn-danger {
     background: linear-gradient(135deg, #ef4444, #dc2626);
     color: white;
+  }
+
+  .btn-danger:hover {
+    background: linear-gradient(135deg, #f05252, #e3342f);
+  }
+
+  .btn-danger-soft {
+    background: #f3d6d6;
+    color: #9f1d1d;
+    border: 1px solid #ddb4b4;
+  }
+
+  .btn-danger-soft:hover {
+    background: #edcaca;
   }
 
   .sm {
     padding: 0.48rem 0.76rem;
     border-radius: 10px;
     font-size: 0.85rem;
-  }
-
-  .actions {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    min-width: 82px;
+    justify-content: center;
   }
 
   .foodForm {
@@ -820,36 +872,36 @@
 
     .hero {
       padding: 1.2rem;
+      align-items: flex-start;
     }
 
-    .right {
+    .hero-actions {
       width: 100%;
     }
 
-    .right .btn {
+    .hero-actions .btn {
       flex: 1;
-      text-align: center;
     }
 
     .row {
       flex-direction: column;
     }
 
-    @media (max-width: 640px) {
-      .item {
-        grid-template-columns: 1fr;
-        align-items: stretch;
-      }
+    .item {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
 
-      .actions {
-        width: 100%;
-        justify-content: stretch;
-      }
+    .actions {
+      width: 100%;
+      justify-content: stretch;
+      flex-wrap: wrap;
+    }
 
-      .actions .btn {
-        flex: 1;
-        text-align: center;
-      }
+    .actions .btn {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
     }
 
     .foodTop {
