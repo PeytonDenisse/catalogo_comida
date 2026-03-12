@@ -42,18 +42,24 @@
     });
 
     async function createFood() {
-        const formData = buildFormData();
 
-        await fetch("/api/food", {
-            method: "POST",
-            body: formData
-        });
+    if (!validarFormulario()) return;
 
-        clearForm();
-        loadAll();
-    }
+    const formData = buildFormData();
+
+    await fetch("/api/food", {
+        method: "POST",
+        body: formData
+    });
+
+    clearForm();
+    loadAll();
+}
 
     async function updateFood() {
+
+        if (!validarFormulario()) return;
+
         const formData = buildFormData();
         formData.append("id", id);
 
@@ -106,6 +112,33 @@
         cat_type_id = "";
         cat_diet_id = "";
     }
+
+    function validarFormulario() {
+
+    const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/;
+
+    if (!title || !nombreRegex.test(title)) {
+        alert("El nombre de la comida solo puede tener letras");
+        return false;
+    }
+
+    if (!description || description.length < 5) {
+        alert("La descripción debe tener al menos 5 caracteres");
+        return false;
+    }
+
+    if (!price || price <= 0) {
+        alert("El precio debe ser mayor a 0");
+        return false;
+    }
+
+    if (!cat_time_id || !cat_type_id || !cat_diet_id) {
+        alert("Debes seleccionar todas las categorías");
+        return false;
+    }
+
+    return true;
+}
 </script>
 
 <h1>Food Test Page 🍔</h1>
