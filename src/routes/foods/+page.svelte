@@ -1,6 +1,7 @@
 <script>
     import { search } from "$lib/stores/search";
-
+    import { Search } from "@lucide/svelte";
+    import SearchBar from "./components/SearchBar.svelte";
     export let data;
 
     let foodsFiltered = [];
@@ -21,6 +22,8 @@
       <h1>Dynamic Food</h1>
     </div>
   </header>
+
+  <SearchBar />
 
   <section class="grid">
     {#each foodsFiltered as f}
@@ -204,9 +207,74 @@ h2{
   margin-bottom:.6rem;
 }
 
-.empty-box h3{
-  margin:0 0 .5rem 0;
-  color:#1f2937;
-}
+  .empty-box {
+    grid-column: 1 / -1;
+    background: white;
+    border: 2px dashed #ffd1bb;
+    border-radius: 22px;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #6b7280;
+  }
+
+  .empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .empty-box h3 {
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+  }
+
+  .empty-box p {
+    margin: 0;
+  }
+
+  @media (max-width: 700px) {
+    .wrap {
+      padding: 1rem;
+    }
+
+    .hero {
+      padding: 1.4rem;
+    }
+
+    .admin-btn {
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+    }
+  }
+
+
+  .main-banner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    width: 100%;
+    margin-bottom: 32px;
+    color: #fff;
+
+    background-image: url(https://images.pexels.com/photos/3023476/pexels-photo-3023476.jpeg);
+    background-size: cover;
+    background-position: 0 700px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    
+    .text-banner{
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.4);
+
+      h1{ color: #fff; }
+    }
+  }
 
 </style>
