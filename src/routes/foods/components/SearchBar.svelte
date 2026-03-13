@@ -1,9 +1,11 @@
 <script>
     import { Search } from "@lucide/svelte";
+    export let searchText;
+
 </script>
 
 <div class="cont-search">
-    <input type="text" placeholder="Buscar una comida">
+    <input type="text" placeholder="Buscar una comida" bind:value={searchText}>
     <select name="" id="">
         <option value=""></option>
     </select>

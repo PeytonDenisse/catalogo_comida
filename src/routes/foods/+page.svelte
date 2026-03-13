@@ -1,13 +1,14 @@
 <script>
-    import { search } from "$lib/stores/search";
     import { Search } from "@lucide/svelte";
     import SearchBar from "./components/SearchBar.svelte";
+    import NoFoodCard from "./components/NoFoodCard.svelte";
     export let data;
 
     let foodsFiltered = [];
+    let searchQuery = "";
 
     $: foodsFiltered = data.foods.filter(f =>
-        f.title.toLowerCase().includes($search.toLowerCase())
+        f.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 </script>
 
@@ -23,7 +24,7 @@
     </div>
   </header>
 
-  <SearchBar />
+  <SearchBar bind:searchText={searchQuery} />
 
   <section class="grid">
     {#each foodsFiltered as f}
@@ -51,13 +52,7 @@
 
       </a>
     {:else}
-
-      <div class="empty-box">
-        <div class="empty-icon">🍽️</div>
-        <h3>No hay comida todavía</h3>
-        <p>Agrega productos desde el panel administrador.</p>
-      </div>
-
+      <NoFoodCard />
     {/each}
   </section>
 
@@ -192,59 +187,13 @@ h2{
   font-size:.95rem;
 }
 
-.empty-box{
-  grid-column:1/-1;
-  background:white;
-  border:2px dashed #ffd1bb;
-  border-radius:22px;
-  padding:3rem 1rem;
-  text-align:center;
-  color:#6b7280;
-}
 
-.empty-icon{
-  font-size:2.5rem;
-  margin-bottom:.6rem;
-}
-
-  .empty-box {
-    grid-column: 1 / -1;
-    background: white;
-    border: 2px dashed #ffd1bb;
-    border-radius: 22px;
-    padding: 3rem 1rem;
-    text-align: center;
-    color: #6b7280;
-  }
-
-  .empty-icon {
-    font-size: 2.5rem;
-    margin-bottom: 0.6rem;
-  }
-
-  .empty-box h3 {
-    margin: 0 0 0.5rem 0;
-    color: #1f2937;
-  }
-
-  .empty-box p {
-    margin: 0;
-  }
 
   @media (max-width: 700px) {
     .wrap {
       padding: 1rem;
     }
 
-    .hero {
-      padding: 1.4rem;
-    }
-
-    .admin-btn {
-      width: 100%;
-      text-align: center;
-      box-sizing: border-box;
-    }
   }
 
 

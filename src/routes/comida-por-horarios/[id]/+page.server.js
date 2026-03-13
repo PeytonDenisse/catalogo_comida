@@ -5,9 +5,9 @@ export async function load({ params }){
     const id = params.id;
     let catData = {};
 
-    const resFoodData = await getCategoryTimeById(id);
-    if(resFoodData.success){
-        catData = resFoodData.data[0];
+    const resCatData = await getCategoryTimeById(id);
+    if(resCatData.success){
+        catData = resCatData.data[0];
     }else{
         throw redirect(302, '/foods');
     }
