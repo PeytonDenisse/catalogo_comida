@@ -1,4 +1,5 @@
 <script>
+    import Navbar from "$lib/components/Navbar.svelte";
     import { search } from "$lib/stores/search";
 
     export let data;
