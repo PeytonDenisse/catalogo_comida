@@ -1,4 +1,5 @@
 <script>
+    import Navbar from "$lib/components/Navbar.svelte";
     import { search } from "$lib/stores/search";
     import { Search } from "@lucide/svelte";
     import SearchBar from "./components/SearchBar.svelte";
