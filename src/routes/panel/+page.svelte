@@ -227,6 +227,11 @@
     </div>
 
     <div class="hero-actions">
+
+      <a href="/panel" class="btn btn-light">
+        ⬅ Volver al dashboard
+      </a>
+
       <button class="btn btn-light" on:click={loadAll} disabled={loading}>
         {loading ? "Actualizando..." : "Refrescar"}
       </button>
@@ -236,6 +241,7 @@
       <button class="btn btn-danger-soft" on:click={handleLogout}>
         Cerrar sesión
       </button>
+
     </div>
   </header>
 
@@ -403,9 +409,6 @@
 
     <div class="row end">
 
-      <a href="/foods" class="btn btn-light">
-        ⬅ Volver
-      </a>
 
       <button class="btn btn-soft" on:click={clearFoodForm} disabled={loading}>
         Limpiar
