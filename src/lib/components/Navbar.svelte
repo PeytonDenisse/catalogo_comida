@@ -11,7 +11,7 @@
 
 <nav class="navbar">
 
-    <a href="/" class="btn-back">⬅ Volver al Catálogo</a>
+    <a href="/panel" class="btn-back">⬅ Volver</a>
 
     <div class="search-box">
         <input 

@@ -401,14 +401,21 @@
         </select>
       </div>
 
-      <div class="row end">
-        <button class="btn btn-soft" on:click={clearFoodForm} disabled={loading}>
-          Limpiar
-        </button>
-        <button class="btn btn-primary" on:click={saveFood} disabled={loading}>
-          {foodEditingId ? "Actualizar comida" : "Crear comida"}
-        </button>
-      </div>
+    <div class="row end">
+
+      <a href="/foods" class="btn btn-light">
+        ⬅ Volver
+      </a>
+
+      <button class="btn btn-soft" on:click={clearFoodForm} disabled={loading}>
+        Limpiar
+      </button>
+
+      <button class="btn btn-primary" on:click={saveFood} disabled={loading}>
+        {foodEditingId ? "Actualizar comida" : "Crear comida"}
+      </button>
+
+    </div>
     </div>
 
     <div class="foodsGrid">

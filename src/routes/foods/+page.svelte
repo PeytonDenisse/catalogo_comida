@@ -1,22 +1,40 @@
 <script>
-    import Navbar from "$lib/components/Navbar.svelte";
-    import { search } from "$lib/stores/search";
-    import { Search } from "@lucide/svelte";
-    import SearchBar from "./components/SearchBar.svelte";
-    export let data;
+  import { goto } from '$app/navigation';
+  import { Search } from "@lucide/svelte";
+  import { search } from "$lib/stores/search";
 
-    let foodsFiltered = [];
+  export let data;
+  const foodData = data.foodData;
 
-    $: foodsFiltered = data.foods.filter(f =>
-        f.title.toLowerCase().includes($search.toLowerCase())
-    );
+  function handleLogout() {
+    console.log("Sesión cerrada");
+    goto('/login'); 
+  }
 </script>
 
-<svelte:head>
-  <title>Catalogo | Dynamic Food</title>
-</svelte:head>
+<nav class="navbar">
 
-<main class="wrap">
+ <a href="/panel" class="btn-back">⬅ Volver</a>
+
+  <div class="search-box">
+    <input 
+      type="text"
+      placeholder="Buscar comida..."
+      bind:value={$search}
+    >
+    <Search size={16}/>
+  </div>
+
+  <div class="actions">
+    <span class="badge-admin">Admin Mode</span>
+    <button class="btn-logout" on:click={handleLogout}>
+      Cerrar Sesión
+    </button>
+  </div>
+
+</nav>
+
+<main class="page">
 
   <header class="main-banner">
     <div class="text-banner">
