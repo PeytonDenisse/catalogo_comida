@@ -30,7 +30,7 @@
         }
 
         // logged_in -> cookie ya se setea en +server.js
-        goto("/panel/dashboard");
+        goto("/panel/dashboard"); 
         } catch (e) {
         errorMessage = "Error de conexión con el servidor";
         } finally {
