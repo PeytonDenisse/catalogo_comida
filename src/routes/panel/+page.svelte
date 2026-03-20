@@ -229,7 +229,7 @@
     <div class="hero-actions">
 
       <a href="/panel" class="btn btn-light">
-        ⬅ Volver al dashboard
+        ⬅ Volver
       </a>
 
       <button class="btn btn-light" on:click={loadAll} disabled={loading}>

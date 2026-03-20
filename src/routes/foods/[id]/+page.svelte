@@ -1,7 +1,7 @@
 <script>
   export let data;
 
-  const foodData = data.foodData;
+  let foods = data.foods || [];
 </script>
 
 <main class="page">

@@ -1,34 +1,43 @@
 <script>
   import { goto } from '$app/navigation';
   import { Search } from "@lucide/svelte";
-  import { search } from "$lib/stores/search";
 
   export let data;
-  const foodData = data.foodData;
+
+  let foods = data.foods || [];
+  let search = "";
 
   function handleLogout() {
-    console.log("Sesión cerrada");
     goto('/login'); 
   }
+
+  $: foodsFiltered = foods.filter(f =>
+    f.title.toLowerCase().includes(search.toLowerCase())
+  );
 </script>
 
 <nav class="navbar">
 
- <a href="/panel" class="btn-back">⬅ Volver</a>
+<div class="nav-left">
+  <a href="/admin/dashboard" class="btn btn-light sm">
+    ⬅ Volver al dashboard
+  </a>
+</div>
 
   <div class="search-box">
+    <Search size={16}/>
     <input 
       type="text"
       placeholder="Buscar comida..."
-      bind:value={$search}
-    >
-    <Search size={16}/>
+      bind:value={search}
+    />
   </div>
 
-  <div class="actions">
+  <div class="nav-right">
     <span class="badge-admin">Admin Mode</span>
-    <button class="btn-logout" on:click={handleLogout}>
-      Cerrar Sesión
+
+    <button class="btn btn-danger-soft sm" on:click={handleLogout}>
+      Cerrar sesión
     </button>
   </div>
 
@@ -41,8 +50,6 @@
       <h1>Dynamic Food</h1>
     </div>
   </header>
-
-  <SearchBar />
 
   <section class="grid">
     {#each foodsFiltered as f}
@@ -295,5 +302,83 @@ h2{
       h1{ color: #fff; }
     }
   }
+
+  .navbar{
+  max-width:1200px;
+  margin:1.5rem auto;
+  padding:0.8rem 1rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+
+  background: linear-gradient(135deg, #f4efec, #ece6e2);
+  border:1px solid #d4cbc5;
+  border-radius:18px;
+  box-shadow:0 10px 24px rgba(0,0,0,0.08);
+}
+
+.nav-left,
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+}
+
+.search-box{
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+
+  background:#f4efec;
+  border:1px solid #c9c0bb;
+  border-radius:14px;
+  padding:0.6rem 0.8rem;
+
+  transition: all 0.2s ease;
+}
+
+.search-box:focus-within{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.12);
+  background:#f8f5f3;
+}
+
+.search-box input{
+  border:none;
+  outline:none;
+  background:transparent;
+  width:100%;
+  font-size:0.95rem;
+  color:#1f2937;
+}
+
+.badge-admin{
+  background:#dcd4ff;
+  color:#5b21b6;
+  font-weight:800;
+  padding:0.35rem 0.7rem;
+  border-radius:999px;
+  font-size:0.75rem;
+}
+
+/* responsive */
+@media (max-width:700px){
+  .navbar{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .nav-left,
+  .nav-right{
+    justify-content:space-between;
+    width:100%;
+  }
+
+  .search-box{
+    width:100%;
+  }
+}
 
 </style>

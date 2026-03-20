@@ -1,7 +1,6 @@
 <script>
     import { goto } from '$app/navigation';
     import { Search } from "@lucide/svelte";
-    import { search } from "$lib/stores/search";
 
     function handleLogout() {
         console.log("Sesión cerrada");
@@ -15,10 +14,10 @@
 
     <div class="search-box">
         <input 
-            type="text" 
-            placeholder="Buscar comida..."
-            bind:value={$search}
-        >
+        type="text"
+        placeholder="Buscar comida..."
+        bind:value={search}
+        />
         <Search size={16}/>
     </div>
 
