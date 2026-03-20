@@ -1,5 +1,10 @@
 <script>
     import { onMount } from "svelte";
+    import { goto } from '$app/navigation';
+
+    function irAlDashboard() {
+        goto('/admin/dashboard');
+    }
 
     let foods = [];
 
@@ -141,7 +146,13 @@
 }
 </script>
 
-<h1>Food Test Page 🍔</h1>
+<div class="header-admin">
+    <button class="btn-dashboard" on:click={irAlDashboard}>
+        ⬅ Volver al dashboard
+    </button>
+</div>
+
+<h1>Food Management 🍔</h1>
 
 <h2>{id ? "Update Food" : "Create Food"}</h2>
 
@@ -196,3 +207,45 @@
         <button on:click={() => deleteFoodItem(food.id)}>Delete</button>
     </div>
 {/each}
+
+<style>
+    .admin-controls {
+        padding: 20px;
+        background: #1a1a1a;
+        border-bottom: 1px solid #333;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .btn-dashboard {
+        background: transparent;
+        color: #ffaa00;
+        border: 2px solid #ffaa00;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-dashboard:hover {
+        background: #ffaa00;
+        color: #111;
+        transform: scale(1.02);
+    }
+
+    .admin-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        color: white;
+    }
+
+    h1 {
+        color: #ffaa00;
+        margin-bottom: 1rem;
+    }
+</style>

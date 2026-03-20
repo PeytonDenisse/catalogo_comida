@@ -37,11 +37,13 @@
 
     <div class="menu-buttons">
       <div class="hero-actions">
-        <a href="/panel" class="btn-link">⬅ Volver</a>
+        <button class="btn-link" on:click={() => goto('/admin/dashboard')} style="background:none; border:none; cursor:pointer;">
+          ⬅ Volver al Dashboard
+        </button>
         <button class="btn btn-light" on:click={loadAll} disabled={loading}>
           {loading ? "Actualizando..." : "Refrescar"}
         </button>
-      </div>
+    </div>
 
       <button class="menu-btn primary" on:click={() => goto("/panel/crear-categoria")}>
         Crear categoría

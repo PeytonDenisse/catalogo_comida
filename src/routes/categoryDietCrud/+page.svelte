@@ -1,5 +1,10 @@
 <script>
 	import { onMount } from "svelte";
+	import { goto } from '$app/navigation';
+
+	function irAlDashboard() {
+		goto('/admin/dashboard');
+	}
 
 	/* =========================
 	FOOD STATE
@@ -256,3 +261,57 @@
 		loadFoods();
 	});
 </script>
+
+<div class="admin-controls">
+    <button class="btn-dashboard" on:click={irAlDashboard}>
+        ⬅ Volver al Dashboard
+    </button>
+</div>
+
+<main class="admin-container">
+    <h1>Panel de Gestión Administrativa 🛠️</h1>
+    <p>Desde aquí puedes crear y editar productos o categorías.</p>
+    
+    </main>
+
+<style>
+    .admin-controls {
+        padding: 20px;
+        background: #1a1a1a;
+        border-bottom: 1px solid #333;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .btn-dashboard {
+        background: transparent;
+        color: #ffaa00;
+        border: 2px solid #ffaa00;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-dashboard:hover {
+        background: #ffaa00;
+        color: #111;
+        transform: scale(1.02);
+    }
+
+    .admin-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        color: white;
+    }
+
+    h1 {
+        color: #ffaa00;
+        margin-bottom: 1rem;
+    }
+</style>
