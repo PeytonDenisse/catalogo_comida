@@ -6,9 +6,8 @@
 <div class="empty-box">
     <div class="empty-icon">🍽️</div>
     <h3>No se encontro comida <FrownIcon size={13} /></h3>
-    <p>Intenta buscar otra cosa.</p>
+    <p>Prueba con otra búsqueda o cambia los filtros.</p>
 </div>
-
 
 <style>
     .empty-box{
