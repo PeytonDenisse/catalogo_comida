@@ -95,11 +95,11 @@
         {loading ? "Actualizando..." : "Refrescar"}
       </button>
 
-      <button class="btn btn-primary" on:click={() => goto("/panel/crear-comida")}>
+      <button class="btn btn-primary" on:click={() => goto("/admin/crear-comida")}>
         Crear comida
       </button>
 
-      <button class="btn btn-soft" on:click={() => goto("/panel/crear-categoria")}>
+      <button class="btn btn-soft" on:click={() => goto("/admin/crear-categoria")}>
         Crear categoría
       </button>
 

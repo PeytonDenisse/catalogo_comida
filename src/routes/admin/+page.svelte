@@ -37,18 +37,20 @@
 
     <div class="menu-buttons">
       <div class="hero-actions">
-        <a href="/panel" class="btn-link">⬅ Volver</a>
+        <button class="btn-link" on:click={() => goto('/admin/dashboard')} style="...">
+          ⬅ Volver
+        </button>
         <button class="btn btn-light" on:click={loadAll} disabled={loading}>
           {loading ? "Actualizando..." : "Refrescar"}
         </button>
       </div>
 
-      <button class="menu-btn primary" on:click={() => goto("/panel/crear-categoria")}>
-        Crear categoría
+      <button class="menu-btn secondary" on:click={() => goto("/admin/crear-comida")}>
+        Crear comida
       </button>
 
-      <button class="menu-btn secondary" on:click={() => goto("/panel/crear-comida")}>
-        Crear comida
+      <button class="menu-btn primary" on:click={() => goto("/admin/crear-categoria")}>
+        Crear categoría
       </button>
 
       <button class="menu-btn ghost" on:click={() => goto("/admin/dashboard")}>

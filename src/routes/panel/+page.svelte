@@ -15,7 +15,7 @@
   let title = "", image_url = "", description = "", price = 0;
   let cat_time_id = "", cat_type_id = "", cat_diet_id = "", foodEditingId = null;
 
-  // Funciones placeholder (debes tenerlas definidas)
+  // Funciones placeholder (debes tenerlas definidas en tu lógica)
   const loadAll = () => {};
   const saveType = () => {};
   const deleteType = (id, name) => {};
@@ -37,24 +37,24 @@
 
     <div class="menu-buttons">
       <div class="hero-actions">
-        <button class="btn-link" on:click={() => goto('/admin/dashboard')} style="background:none; border:none; cursor:pointer;">
+        <button class="btn-link-back" on:click={() => goto('/admin/dashboard')}>
           ⬅ Volver al Dashboard
         </button>
         <button class="btn btn-light" on:click={loadAll} disabled={loading}>
           {loading ? "Actualizando..." : "Refrescar"}
         </button>
-    </div>
+      </div>
 
-      <button class="menu-btn primary" on:click={() => goto("/panel/crear-categoria")}>
-        Crear categoría
+      <button class="menu-btn primary" on:click={() => goto("/categoryDietCrud")}>
+        Gestionar categorías
       </button>
 
-      <button class="menu-btn secondary" on:click={() => goto("/panel/crear-comida")}>
-        Crear comida
+      <button class="menu-btn secondary" on:click={() => goto("/foodCrud")}>
+        Gestionar comida
       </button>
 
       <button class="menu-btn ghost" on:click={() => goto("/admin/dashboard")}>
-        Dashboard
+        Ir al Dashboard Principal
       </button>
     </div>
   </section>
@@ -214,7 +214,6 @@
 </main>
 
 <style>
-  /* Mantengo tus estilos originales pero corregidos para la nueva estructura */
   :global(body) {
     margin: 0;
     font-family: "Segoe UI", system-ui, sans-serif;
@@ -241,7 +240,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    max-width: 400px;
+    max-width: 450px;
     margin: 0 auto;
   }
 
@@ -250,12 +249,24 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    width: 100%;
   }
 
-  .btn-link {
-    text-decoration: none;
+  /* Estilo para el botón de volver */
+  .btn-link-back {
+    background: none;
+    border: none;
     color: #5b21b6;
     font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 5px;
+    transition: opacity 0.2s;
+  }
+
+  .btn-link-back:hover {
+    opacity: 0.7;
+    text-decoration: underline;
   }
 
   .grid3 {
@@ -291,7 +302,10 @@
     padding: 0.8rem;
     font-weight: bold;
     cursor: pointer;
+    transition: transform 0.2s;
   }
+
+  .menu-btn:hover { transform: translateY(-2px); }
 
   .primary { background: #6d5dfc; color: white; }
   .secondary { background: #f6dccf; color: #d65a12; }

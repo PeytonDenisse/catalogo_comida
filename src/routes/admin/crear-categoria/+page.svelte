@@ -118,7 +118,7 @@
 
 <main class="page">
   <div class="top">
-    <button class="back" on:click={() => goto("/panel")}>← Volver</button>
+    <button class="back" on:click={() => goto("/admin/dashboard")}>← Volver</button>
     <h1>Categorías</h1>
   </div>
 

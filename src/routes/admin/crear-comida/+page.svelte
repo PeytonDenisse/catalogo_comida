@@ -129,7 +129,7 @@
         {loading ? "Actualizando..." : "Refrescar"}
       </button>
 
-      <button class="btn btn-soft" on:click={() => goto("/panel")}>
+      <button class="btn btn-soft" on:click={() => goto("/admin/dashboard")}>
         Volver
       </button>
 
