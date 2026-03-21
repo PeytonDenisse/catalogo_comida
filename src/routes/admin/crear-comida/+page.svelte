@@ -1,6 +1,5 @@
 <script>
   import { onMount } from "svelte";
-  import { goto } from "$app/navigation";
 
   let loading = false;
   let error = "";
@@ -43,7 +42,7 @@
       types = dTy.data || [];
       foods = dF.data || [];
     } catch {
-      error = "Error cargando la información";
+      error = "Error cargando la informacion";
     } finally {
       loading = false;
     }
@@ -75,8 +74,8 @@
   async function saveFood() {
     error = "";
 
-    if (!title.trim()) return (error = "El título es obligatorio");
-    if (!price || isNaN(Number(price))) return (error = "Precio inválido");
+    if (!title.trim()) return (error = "El titulo es obligatorio");
+    if (!price || isNaN(Number(price))) return (error = "Precio invalido");
     if (!cat_time_id || !cat_type_id || !cat_diet_id) {
       return (error = "Selecciona horario, tipo y dieta");
     }
@@ -102,7 +101,7 @@
   }
 
   async function deleteFood(id, label) {
-    const ok = confirm(`¿Seguro que quieres eliminar: ${label}?`);
+    const ok = confirm(`Seguro que quieres eliminar: ${label}?`);
     if (!ok) return;
 
     await fetch(`/api/food?id=${id}`, { method: "DELETE" });
@@ -115,48 +114,66 @@
 </script>
 
 <main class="wrap">
-  <header class="hero">
+  <section class="hero">
     <div class="hero-left">
-      <span class="badge">Crear comida</span>
-      <h1>{foodEditingId ? "Editar comida" : "Nueva comida"}</h1>
+      <span class="badge">Gestion de comidas</span>
+      <h1>{foodEditingId ? "Edita una comida existente" : "Crea una nueva comida"}</h1>
       <p class="sub">
-        Completa el formulario y administra tus productos.
+        El formulario y la vista previa conviven en una sola pantalla para que el alta
+        se sienta mas profesional y menos saturada de acciones repetidas.
       </p>
     </div>
 
     <div class="hero-actions">
+      <div class="hero-mini-card">
+        <span>Estado del formulario</span>
+        <strong>{foodEditingId ? "Modo edicion" : "Listo para crear"}</strong>
+      </div>
+
+      <div class="hero-mini-card">
+        <span>Total actual</span>
+        <strong>{foods.length} comidas</strong>
+      </div>
+
       <button class="btn btn-light" on:click={loadAll} disabled={loading}>
-        {loading ? "Actualizando..." : "Refrescar"}
-      </button>
-
-      <button class="btn btn-soft" on:click={() => goto("/panel")}>
-        Volver
-      </button>
-
-      <button class="btn btn-primary" on:click={saveFood} disabled={loading}>
-        {foodEditingId ? "Guardar cambios" : "Crear comida"}
+        {loading ? "Actualizando..." : "Refrescar datos"}
       </button>
     </div>
-  </header>
+  </section>
 
   {#if error}
     <div class="error">{error}</div>
   {/if}
 
+  <section class="stats-strip">
+    <article>
+      <span>Precio de vista previa</span>
+      <strong>${previewPrice}</strong>
+    </article>
+    <article>
+      <span>Categorias listas</span>
+      <strong>{types.length + diets.length + times.length}</strong>
+    </article>
+    <article>
+      <span>Seleccion actual</span>
+      <strong>{title ? title : "Sin titulo"}</strong>
+    </article>
+  </section>
+
   <section class="form-layout">
-    <div class="panel-card form-card">
+    <div class="panel-card">
       <div class="section-head">
         <h2>Formulario</h2>
-        <span class="counter">{foods.length} comidas</span>
+        <span class="counter">{foodEditingId ? "Editando" : "Nuevo registro"}</span>
       </div>
 
       <div class="foodForm">
         <div class="row2">
-          <input placeholder="Título" bind:value={title} />
+          <input placeholder="Titulo" bind:value={title} />
           <input placeholder="Imagen URL" bind:value={image_url} />
         </div>
 
-        <textarea placeholder="Descripción" bind:value={description}></textarea>
+        <textarea placeholder="Descripcion" bind:value={description}></textarea>
 
         <div class="row2 four">
           <input type="number" placeholder="Precio" bind:value={price} />
@@ -197,6 +214,7 @@
     <div class="panel-card preview-card">
       <div class="section-head">
         <h2>Vista previa</h2>
+        <span class="counter soft">${previewPrice}</span>
       </div>
 
       <article class="preview-food">
@@ -204,15 +222,19 @@
           {#if image_url}
             <img src={image_url} alt={title || "Vista previa"} />
           {:else}
-            <div class="noimg">🍽️ Sin imagen</div>
+            <div class="noimg">Sin imagen</div>
           {/if}
         </div>
 
         <div class="preview-info">
           <h3>{title || "Nombre de la comida"}</h3>
-          <p>{description || "Aquí aparecerá la descripción de la comida."}</p>
+          <p>{description || "Aqui aparecera la descripcion de la comida."}</p>
+
           <div class="bottom">
             <span class="price">${previewPrice}</span>
+            <span class="preview-meta">
+              {cat_type_id || cat_time_id || cat_diet_id ? "Categorias seleccionadas" : "Sin categorias"}
+            </span>
           </div>
         </div>
       </article>
@@ -232,7 +254,7 @@
             {#if f.image_url}
               <img src={f.image_url} alt={f.title} />
             {:else}
-              <div class="noimg">🍽️ Sin imagen</div>
+              <div class="noimg">Sin imagen</div>
             {/if}
           </div>
 
@@ -255,93 +277,127 @@
           </div>
         </article>
       {:else}
-        <p class="muted">No hay comidas todavía.</p>
+        <p class="muted">No hay comidas todavia.</p>
       {/each}
     </div>
   </section>
 </main>
 
 <style>
-  :global(body) {
-    margin: 0;
-    background: linear-gradient(135deg, #15121f 0%, #111827 50%, #0f172a 100%);
-    color: #f8fafc;
-    font-family: "Segoe UI", system-ui, sans-serif;
-  }
-
   .wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1.4rem;
+    gap: 1.1rem;
   }
 
   .hero {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.2rem;
-    flex-wrap: wrap;
-    padding: 1.5rem 1.7rem;
-    border-radius: 24px;
-    background: linear-gradient(135deg, #f4efec, #ece6e2);
-    border: 1px solid #d4cbc5;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+    gap: 1rem;
+    padding: 1.55rem;
+    border-radius: 30px;
+    background: linear-gradient(145deg, rgba(255, 248, 239, 0.98), rgba(236, 226, 216, 0.95));
+    border: 1px solid rgba(255, 248, 239, 0.08);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.18);
   }
 
   .hero-left {
-    flex: 1;
-    min-width: 260px;
+    min-width: 0;
   }
 
   .badge {
     display: inline-block;
-    padding: 0.38rem 0.82rem;
+    padding: 0.4rem 0.82rem;
     border-radius: 999px;
-    background: #dcd4ff;
-    color: #5b21b6;
-    font-size: 0.86rem;
+    background: #f4e1b3;
+    color: #8a4b08;
+    font-size: 0.8rem;
     font-weight: 800;
     margin-bottom: 0.65rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   h1 {
     margin: 0;
-    color: #1f2937;
-    font-size: clamp(2rem, 4vw, 2.7rem);
-    line-height: 1.05;
+    color: #1c1917;
+    font-size: clamp(2.15rem, 4vw, 3.25rem);
+    line-height: 0.98;
     font-weight: 800;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
   }
 
   .sub {
     margin: 0.65rem 0 0;
     font-size: 1rem;
     color: #374151;
+    line-height: 1.7;
     font-weight: 600;
   }
 
   .hero-actions {
-    display: flex;
-    gap: 0.7rem;
-    align-items: center;
-    flex-wrap: wrap;
+    display: grid;
+    gap: 0.8rem;
+    align-content: start;
   }
 
-  .hero-actions .btn {
-    min-width: 126px;
-    text-align: center;
-    justify-content: center;
+  .hero-mini-card {
+    padding: 1rem;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.64);
+    border: 1px solid rgba(160, 148, 138, 0.18);
+    color: #374151;
+  }
+
+  .hero-mini-card span {
+    display: block;
+    font-size: 0.84rem;
+    color: #6b7280;
+    margin-bottom: 0.3rem;
+  }
+
+  .hero-mini-card strong {
+    color: #111827;
+    font-size: 1.12rem;
+  }
+
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .stats-strip article {
+    padding: 1rem 1.1rem;
+    border-radius: 22px;
+    background: rgba(255, 248, 239, 0.92);
+    border: 1px solid rgba(255, 248, 239, 0.08);
+    box-shadow: 0 20px 38px rgba(0, 0, 0, 0.14);
+    color: #1f2937;
+  }
+
+  .stats-strip span {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #6b7280;
+    font-size: 0.85rem;
+  }
+
+  .stats-strip strong {
+    display: block;
+    color: #111827;
+    font-size: 1.4rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .error {
-    background: #3b1d24;
-    border: 1px solid #7f1d1d;
+    background: rgba(69, 10, 10, 0.72);
+    border: 1px solid rgba(248, 113, 113, 0.35);
     color: #fecaca;
     padding: 0.95rem 1rem;
-    border-radius: 14px;
+    border-radius: 16px;
     font-weight: 600;
   }
 
@@ -349,15 +405,16 @@
     display: grid;
     grid-template-columns: 1.25fr 0.75fr;
     gap: 1rem;
+    align-items: start;
   }
 
   .panel-card {
-    background: #e6dfdb;
+    background: rgba(255, 248, 239, 0.92);
     color: #1f2937;
-    border-radius: 22px;
-    padding: 1rem;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
-    border: 1px solid #d4cbc5;
+    border-radius: 26px;
+    padding: 1.1rem;
+    box-shadow: 0 20px 38px rgba(0, 0, 0, 0.14);
+    border: 1px solid rgba(255, 248, 239, 0.08);
   }
 
   .section-head {
@@ -370,19 +427,24 @@
 
   .section-head h2 {
     margin: 0;
-    color: #1f2544;
+    color: #111827;
     font-size: 1.25rem;
     font-weight: 800;
   }
 
   .counter {
-    background: #dcd4ff;
-    color: #5b21b6;
+    background: #dff3ef;
+    color: #0f766e;
     border-radius: 999px;
     padding: 0.36rem 0.72rem;
     font-size: 0.82rem;
     font-weight: 800;
     white-space: nowrap;
+  }
+
+  .counter.soft {
+    background: #efe4d8;
+    color: #8a4b08;
   }
 
   .foodForm {
@@ -416,9 +478,9 @@
   textarea {
     width: 100%;
     padding: 0.95rem 1rem;
-    border-radius: 14px;
-    border: 1px solid #c9c0bb;
-    background: #f4efec;
+    border-radius: 16px;
+    border: 1px solid #decfc2;
+    background: #fcf8f4;
     color: #172033;
     outline: none;
     box-sizing: border-box;
@@ -434,26 +496,31 @@
   input:focus,
   select:focus,
   textarea:focus {
-    border-color: #7c3aed;
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
-    background: #f8f5f3;
+    border-color: #0f766e;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    background: #ffffff;
   }
 
   textarea {
-    min-height: 105px;
+    min-height: 115px;
     resize: vertical;
   }
 
+  .preview-card {
+    position: sticky;
+    top: 1rem;
+  }
+
   .preview-food {
-    border-radius: 18px;
+    border-radius: 22px;
     overflow: hidden;
-    background: #ddd6d2;
-    border: 1px solid #c9c0bb;
+    background: #f3ece6;
+    border: 1px solid #e2d3c5;
   }
 
   .preview-img {
     height: 210px;
-    background: #cfc7c2;
+    background: linear-gradient(135deg, #eaddd2, #d8c9bb);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -473,14 +540,38 @@
   .preview-info h3 {
     margin: 0 0 0.5rem;
     color: #162033;
-    font-size: 1.15rem;
+    font-size: 1.2rem;
   }
 
   .preview-info p {
     margin: 0;
     color: #586173;
-    line-height: 1.5;
+    line-height: 1.55;
     min-height: 52px;
+  }
+
+  .bottom {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .price {
+    white-space: nowrap;
+    background: #efe4d8;
+    color: #8a4b08;
+    padding: 0.42rem 0.78rem;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 0.92rem;
+  }
+
+  .preview-meta {
+    color: #6b7280;
+    font-size: 0.85rem;
+    text-align: right;
   }
 
   .foodsGrid {
@@ -490,10 +581,10 @@
   }
 
   .foodCard {
-    border-radius: 18px;
+    border-radius: 22px;
     overflow: hidden;
-    background: #ddd6d2;
-    border: 1px solid #c9c0bb;
+    background: #f3ece6;
+    border: 1px solid #e2d3c5;
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
     transition: transform 0.16s ease, box-shadow 0.16s ease;
   }
@@ -505,7 +596,7 @@
 
   .img {
     height: 170px;
-    background: #cfc7c2;
+    background: linear-gradient(135deg, #eaddd2, #d8c9bb);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -519,9 +610,10 @@
   }
 
   .noimg {
-    color: #5f6878;
-    font-size: 0.95rem;
-    font-weight: 600;
+    color: #6b7280;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .info {
@@ -549,24 +641,8 @@
     color: #586173;
     font-size: 0.93rem;
     min-height: 42px;
-    line-height: 1.48;
+    line-height: 1.52;
     margin: 0;
-  }
-
-  .bottom {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .price {
-    white-space: nowrap;
-    background: #f6dccf;
-    color: #d65a12;
-    padding: 0.36rem 0.72rem;
-    border-radius: 999px;
-    font-weight: 900;
-    font-size: 0.9rem;
   }
 
   .actions {
@@ -586,13 +662,14 @@
   .btn {
     border: none;
     padding: 0.85rem 1rem;
-    border-radius: 14px;
+    border-radius: 16px;
     font-weight: 800;
     cursor: pointer;
     text-decoration: none;
     transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
   }
 
   .btn:hover {
@@ -605,22 +682,22 @@
   }
 
   .btn-primary {
-    background: linear-gradient(135deg, #6d5dfc, #7c3aed);
+    background: linear-gradient(135deg, #0f766e, #0b5f59);
     color: white;
-    box-shadow: 0 8px 18px rgba(109, 93, 252, 0.18);
+    box-shadow: 0 10px 24px rgba(15, 118, 110, 0.22);
   }
 
   .btn-light {
     background: #ffffff;
     color: #111827;
-    border: 1px solid #cfc7c2;
+    border: 1px solid #d6c8bc;
     font-weight: 700;
   }
 
   .btn-soft {
-    background: #d4ccc7;
-    color: #394150;
-    border: 1px solid #bfb6b0;
+    background: #efe4d8;
+    color: #5b3412;
+    border: 1px solid #dbc5b0;
   }
 
   .btn-danger {
@@ -630,38 +707,32 @@
 
   .sm {
     padding: 0.48rem 0.76rem;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 0.85rem;
     min-width: 82px;
-    justify-content: center;
   }
 
-  @media (max-width: 1000px) {
+  @media (max-width: 1100px) {
+    .hero,
+    .stats-strip,
     .form-layout {
       grid-template-columns: 1fr;
     }
 
+    .preview-card {
+      position: static;
+    }
+  }
+
+  @media (max-width: 860px) {
     .row2.four {
       grid-template-columns: 1fr 1fr;
     }
   }
 
   @media (max-width: 700px) {
-    .wrap {
-      padding: 1rem;
-    }
-
     .hero {
-      padding: 1.2rem;
-      align-items: flex-start;
-    }
-
-    .hero-actions {
-      width: 100%;
-    }
-
-    .hero-actions .btn {
-      flex: 1;
+      padding: 1.15rem;
     }
 
     .row2,
@@ -673,7 +744,8 @@
       flex-direction: column;
     }
 
-    .foodTop {
+    .foodTop,
+    .bottom {
       flex-direction: column;
       align-items: flex-start;
     }
@@ -683,9 +755,9 @@
       flex-wrap: wrap;
     }
 
-    .actions .btn {
+    .actions .btn,
+    .end .btn {
       flex: 1;
-      justify-content: center;
     }
   }
 </style>

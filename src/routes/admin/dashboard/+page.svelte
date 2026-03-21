@@ -79,12 +79,12 @@
 </script>
 
 <main class="wrap">
-  <header class="hero">
+  <section class="hero">
     <div class="hero-left">
       <span class="badge">Dashboard</span>
       <h1>Resumen general</h1>
       <p class="sub">
-        Bienvenido, <strong>{data.user.username}</strong>
+        <strong>{data.user.username}</strong>
         <span class="dot">•</span>
         <span>{data.user.email}</span>
       </p>
@@ -94,20 +94,11 @@
       <button class="btn btn-light" on:click={loadAll} disabled={loading}>
         {loading ? "Actualizando..." : "Refrescar"}
       </button>
-
-      <button class="btn btn-primary" on:click={() => goto("/panel/crear-comida")}>
-        Crear comida
-      </button>
-
-      <button class="btn btn-soft" on:click={() => goto("/panel/crear-categoria")}>
-        Crear categoría
-      </button>
-
       <button class="btn btn-danger-soft" on:click={handleLogout}>
         Salir
       </button>
     </div>
-  </header>
+  </section>
 
   {#if error}
     <div class="error">{error}</div>
@@ -120,7 +111,6 @@
           <span class="stat-title">{stat.title}</span>
           <span class="mini-badge">{stat.value}</span>
         </div>
-
         <h2>{stat.value}</h2>
         <p>{stat.subtitle}</p>
       </article>
@@ -130,7 +120,7 @@
   <section class="dashboard-grid">
     <div class="panel-card summary-card">
       <div class="section-head">
-        <h3>Resumen rápido</h3>
+        <h3>Resumen rapido</h3>
       </div>
 
       <div class="summary-list">
@@ -138,22 +128,18 @@
           <span>Total de comidas</span>
           <strong>{foods.length}</strong>
         </div>
-
         <div class="summary-item">
-          <span>Total de categorías</span>
+          <span>Total de categorias</span>
           <strong>{totalCategories}</strong>
         </div>
-
         <div class="summary-item">
           <span>Tipos creados</span>
           <strong>{types.length}</strong>
         </div>
-
         <div class="summary-item">
           <span>Dietas creadas</span>
           <strong>{diets.length}</strong>
         </div>
-
         <div class="summary-item">
           <span>Horarios creados</span>
           <strong>{times.length}</strong>
@@ -161,23 +147,21 @@
       </div>
 
       <div class="quick-grid">
-        <button class="quick-btn purple" on:click={() => goto("/panel/crear-comida")}>
+        <button class="quick-btn purple" on:click={() => goto("/admin/crear-comida")}>
           Nueva comida
         </button>
-
-        <button class="quick-btn beige" on:click={() => goto("/panel/crear-categoria")}>
-          Nueva categoría
+        <button class="quick-btn beige" on:click={() => goto("/admin/crear-categoria")}>
+          Nueva categoria
         </button>
-
         <button class="quick-btn white" on:click={() => goto("/foods")}>
-          Ver catálogo
+          Ver catalogo
         </button>
       </div>
     </div>
 
     <div class="panel-card latest-card">
       <div class="section-head">
-        <h3>Últimas comidas</h3>
+        <h3>Ultimas comidas</h3>
         <span class="counter">{foods.length}</span>
       </div>
 
@@ -188,7 +172,7 @@
               {#if food.image_url}
                 <img src={food.image_url} alt={food.title} />
               {:else}
-                <span>🍽️</span>
+                <span>Sin imagen</span>
               {/if}
             </div>
 
@@ -200,7 +184,7 @@
             <div class="food-price">${food.price}</div>
           </div>
         {:else}
-          <p class="muted">Todavía no hay comidas registradas.</p>
+          <p class="muted">Todavia no hay comidas registradas.</p>
         {/each}
       </div>
     </div>
@@ -208,65 +192,51 @@
 </main>
 
 <style>
-  :global(body) {
-    margin: 0;
-    background: linear-gradient(135deg, #15121f 0%, #111827 50%, #0f172a 100%);
-    color: #f8fafc;
-    font-family: "Segoe UI", system-ui, sans-serif;
-  }
-
   .wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1.4rem;
+    gap: 1rem;
   }
 
   .hero {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1.2rem;
+    gap: 1rem;
     flex-wrap: wrap;
-    padding: 1.5rem 1.7rem;
-    border-radius: 24px;
-    background: linear-gradient(135deg, #f4efec, #ece6e2);
-    border: 1px solid #d4cbc5;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-  }
-
-  .hero-left {
-    flex: 1;
-    min-width: 260px;
+    padding: 1.3rem 1.45rem;
+    border-radius: 30px;
+    background: linear-gradient(145deg, rgba(255, 248, 239, 0.98), rgba(236, 226, 216, 0.95));
+    border: 1px solid rgba(255, 248, 239, 0.08);
+    box-shadow: 0 22px 42px rgba(120, 113, 108, 0.16);
   }
 
   .badge {
     display: inline-block;
-    padding: 0.38rem 0.82rem;
+    padding: 0.4rem 0.82rem;
     border-radius: 999px;
-    background: #dcd4ff;
-    color: #5b21b6;
-    font-size: 0.86rem;
+    background: #f4e1b3;
+    color: #8a4b08;
+    font-size: 0.8rem;
     font-weight: 800;
-    margin-bottom: 0.65rem;
+    margin-bottom: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   h1 {
     margin: 0;
-    color: #1f2937;
-    font-size: clamp(2rem, 4vw, 2.7rem);
-    line-height: 1.05;
+    color: #1c1917;
+    font-size: clamp(1.9rem, 4vw, 2.9rem);
+    line-height: 1;
     font-weight: 800;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
   }
 
   .sub {
-    margin: 0.65rem 0 0;
-    font-size: 1rem;
-    color: #374151;
-    font-weight: 600;
+    margin: 0.55rem 0 0;
+    color: #4b5563;
+    line-height: 1.55;
     display: flex;
     flex-wrap: wrap;
     gap: 0.45rem;
@@ -275,32 +245,24 @@
 
   .sub strong {
     color: #111827;
-    font-weight: 800;
   }
 
   .dot {
-    opacity: 0.6;
+    opacity: 0.5;
   }
 
   .hero-actions {
     display: flex;
     gap: 0.7rem;
-    align-items: center;
     flex-wrap: wrap;
   }
 
-  .hero-actions .btn {
-    min-width: 126px;
-    text-align: center;
-    justify-content: center;
-  }
-
   .error {
-    background: #3b1d24;
-    border: 1px solid #7f1d1d;
+    background: rgba(69, 10, 10, 0.72);
+    border: 1px solid rgba(248, 113, 113, 0.35);
     color: #fecaca;
     padding: 0.95rem 1rem;
-    border-radius: 14px;
+    border-radius: 16px;
     font-weight: 600;
   }
 
@@ -311,12 +273,12 @@
   }
 
   .stat-card {
-    background: #e6dfdb;
+    background: rgba(255, 248, 239, 0.92);
     color: #1f2937;
-    border-radius: 20px;
+    border-radius: 24px;
     padding: 1.15rem;
-    border: 1px solid #d4cbc5;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 248, 239, 0.08);
+    box-shadow: 0 18px 34px rgba(120, 113, 108, 0.12);
   }
 
   .stat-top {
@@ -379,12 +341,12 @@
   }
 
   .panel-card {
-    background: #e6dfdb;
+    background: rgba(255, 248, 239, 0.92);
     color: #1f2937;
-    border-radius: 22px;
-    padding: 1rem;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
-    border: 1px solid #d4cbc5;
+    border-radius: 26px;
+    padding: 1.1rem;
+    box-shadow: 0 18px 34px rgba(120, 113, 108, 0.12);
+    border: 1px solid rgba(255, 248, 239, 0.08);
   }
 
   .section-head {
@@ -403,8 +365,8 @@
   }
 
   .counter {
-    background: #dcd4ff;
-    color: #5b21b6;
+    background: #dff3ef;
+    color: #0f766e;
     border-radius: 999px;
     padding: 0.36rem 0.72rem;
     font-size: 0.82rem;
@@ -422,9 +384,9 @@
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    background: #dcd5d1;
-    border: 1px solid #cbc1bb;
-    border-radius: 14px;
+    background: #f5ede7;
+    border: 1px solid #e4d5c7;
+    border-radius: 16px;
     padding: 0.9rem 1rem;
   }
 
@@ -440,68 +402,69 @@
 
   .quick-grid {
     display: grid;
-    gap: 0.8rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
   }
 
   .quick-btn {
     border: none;
     border-radius: 16px;
-    padding: 1rem;
-    font-size: 0.98rem;
+    padding: 0.95rem 1rem;
     font-weight: 800;
     cursor: pointer;
-    text-align: left;
-    transition: transform 0.16s ease;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
   }
 
   .quick-btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
   .quick-btn.purple {
-    background: linear-gradient(135deg, #6d5dfc, #7c3aed);
+    background: linear-gradient(135deg, #0f766e, #0b5f59);
     color: white;
+    box-shadow: 0 10px 20px rgba(15, 118, 110, 0.18);
   }
 
   .quick-btn.beige {
-    background: #d4ccc7;
-    color: #394150;
-    border: 1px solid #bfb6b0;
+    background: #efe4d8;
+    color: #5b3412;
   }
 
   .quick-btn.white {
-    background: #ffffff;
+    background: white;
     color: #111827;
-    border: 1px solid #cfc7c2;
+    border: 1px solid #d7d1cc;
   }
 
   .food-list {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.75rem;
   }
 
   .food-item {
     display: grid;
-    grid-template-columns: 64px 1fr auto;
+    grid-template-columns: 68px minmax(0, 1fr) auto;
     gap: 0.8rem;
     align-items: center;
-    background: #dcd5d1;
-    border: 1px solid #cbc1bb;
-    border-radius: 16px;
     padding: 0.8rem;
+    border-radius: 18px;
+    background: #f5ede7;
+    border: 1px solid #e4d5c7;
   }
 
   .thumb {
-    width: 64px;
-    height: 64px;
-    border-radius: 14px;
+    width: 68px;
+    height: 68px;
+    border-radius: 16px;
     overflow: hidden;
-    background: #cfc7c2;
+    background: #e7ddd5;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #5f6878;
+    color: #6b7280;
+    font-size: 0.82rem;
+    text-align: center;
   }
 
   .thumb img {
@@ -512,47 +475,45 @@
   }
 
   .food-meta {
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    min-width: 0;
+    gap: 0.18rem;
   }
 
   .food-meta strong {
-    color: #253047;
+    color: #111827;
   }
 
   .food-meta span {
-    color: #586173;
-    font-size: 0.92rem;
-    line-height: 1.4;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .food-price {
-    background: #f6dccf;
-    color: #d65a12;
-    padding: 0.45rem 0.8rem;
-    border-radius: 999px;
+    color: #0f766e;
     font-weight: 900;
     white-space: nowrap;
   }
 
   .muted {
-    color: #6f7687;
-    margin: 0.4rem 0;
+    color: #6b7280;
+    margin: 0;
     font-weight: 600;
   }
 
   .btn {
     border: none;
     padding: 0.85rem 1rem;
-    border-radius: 14px;
+    border-radius: 16px;
     font-weight: 800;
     cursor: pointer;
-    text-decoration: none;
     transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
   }
 
   .btn:hover {
@@ -564,65 +525,33 @@
     cursor: not-allowed;
   }
 
-  .btn-primary {
-    background: linear-gradient(135deg, #6d5dfc, #7c3aed);
-    color: white;
-    box-shadow: 0 8px 18px rgba(109, 93, 252, 0.18);
-  }
-
   .btn-light {
     background: #ffffff;
     color: #111827;
-    border: 1px solid #cfc7c2;
-    font-weight: 700;
-  }
-
-  .btn-soft {
-    background: #d4ccc7;
-    color: #394150;
-    border: 1px solid #bfb6b0;
+    border: 1px solid #d6c8bc;
   }
 
   .btn-danger-soft {
-    background: #f3d6d6;
-    color: #9f1d1d;
-    border: 1px solid #ddb4b4;
+    background: #efe4d8;
+    color: #5b3412;
+    border: 1px solid #dbc5b0;
   }
 
-  @media (max-width: 1000px) {
-    .stats-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-
+  @media (max-width: 1100px) {
+    .stats-grid,
     .dashboard-grid {
       grid-template-columns: 1fr;
     }
   }
 
-  @media (max-width: 700px) {
-    .wrap {
-      padding: 1rem;
-    }
-
-    .stats-grid {
+  @media (max-width: 760px) {
+    .quick-grid {
       grid-template-columns: 1fr;
-    }
-
-    .hero {
-      padding: 1.2rem;
-      align-items: flex-start;
-    }
-
-    .hero-actions {
-      width: 100%;
-    }
-
-    .hero-actions .btn {
-      flex: 1;
     }
 
     .food-item {
       grid-template-columns: 1fr;
+      justify-items: start;
     }
   }
 </style>

@@ -1,113 +1,104 @@
-<script>
-  import { goto } from "$app/navigation";
-</script>
+<main class="home-page">
+  <section class="actions-grid">
+    <a class="action-card warm" href="/admin/crear-categoria">
+      <span class="tag">Categorias</span>
+      <h2>Gestionar categorias</h2>
+      <strong>Tipos, dietas y horarios</strong>
+    </a>
 
-<main class="menu-page">
-  <section class="menu-card">
-    <span class="badge">Panel de administración</span>
-    <h1>¿Qué quieres hacer?</h1>
-    <p>Selecciona una opción para continuar.</p>
+    <a class="action-card teal" href="/admin/crear-comida">
+      <span class="tag">Comidas</span>
+      <h2>Registrar comidas</h2>
+      <strong>Formulario y vista previa</strong>
+    </a>
 
-    <div class="menu-buttons">
-      <button class="menu-btn primary" on:click={() => goto("/panel/crear-categoria")}>
-        Crear categoría
-      </button>
-
-      <button class="menu-btn secondary" on:click={() => goto("/panel/crear-comida")}>
-        Crear comida
-      </button>
-
-      <button class="menu-btn ghost" on:click={() => goto("/panel/dashboard")}>
-        Dashboard
-      </button>
-    </div>
+    <a class="action-card neutral" href="/admin/dashboard">
+      <span class="tag">Dashboard</span>
+      <h2>Ver dashboard</h2>
+      <strong>Metricas y resumen</strong>
+    </a>
   </section>
 </main>
 
 <style>
-  :global(body) {
-    margin: 0;
-    font-family: "Segoe UI", system-ui, sans-serif;
-    background: linear-gradient(135deg, #15121f 0%, #111827 50%, #0f172a 100%);
+  .home-page {
+    display: block;
   }
 
-  .menu-page {
-    min-height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    box-sizing: border-box;
-  }
-
-  .menu-card {
-    width: 100%;
-    max-width: 520px;
-    background: #ece6e2;
-    border: 1px solid #d4cbc5;
-    border-radius: 24px;
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.18);
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 0.4rem 0.8rem;
+  .tag {
+    display: inline-flex;
+    width: fit-content;
+    padding: 0.38rem 0.75rem;
     border-radius: 999px;
-    background: #dcd4ff;
-    color: #5b21b6;
-    font-size: 0.85rem;
+    background: #f4e1b3;
+    color: #8a4b08;
+    font-size: 0.78rem;
     font-weight: 800;
-    margin-bottom: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
-  h1 {
-    margin: 0;
-    color: #1f2937;
-    font-size: clamp(2rem, 4vw, 2.6rem);
-    font-weight: 800;
+  .actions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
   }
 
-  p {
-    margin: 0.8rem 0 1.6rem;
-    color: #4b5563;
-    font-size: 1rem;
-  }
-
-  .menu-buttons {
+  .action-card {
     display: flex;
     flex-direction: column;
     gap: 0.9rem;
+    min-height: 180px;
+    padding: 1.35rem;
+    border-radius: 30px;
+    text-decoration: none;
+    border: 1px solid rgba(255, 248, 239, 0.08);
+    box-shadow: 0 24px 48px rgba(120, 113, 108, 0.16);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
 
-  .menu-btn {
-    border: none;
-    border-radius: 16px;
-    padding: 1rem 1.2rem;
+  .action-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .action-card h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    letter-spacing: -0.03em;
+  }
+
+  .action-card strong {
+    margin-top: auto;
     font-size: 1rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease;
+    opacity: 0.86;
   }
 
-  .menu-btn:hover {
-    transform: translateY(-2px);
+  .action-card.warm {
+    background: linear-gradient(155deg, #f8ede2, #f3dcc8);
+    color: #5b3412;
   }
 
-  .primary {
-    background: linear-gradient(135deg, #6d5dfc, #7c3aed);
-    color: white;
-    box-shadow: 0 10px 22px rgba(109, 93, 252, 0.2);
+  .action-card.teal {
+    background: linear-gradient(155deg, #dff3ef, #cbe8e3);
+    color: #134e4a;
   }
 
-  .secondary {
-    background: #f6dccf;
-    color: #d65a12;
+  .action-card.neutral {
+    background: linear-gradient(155deg, #ece7e2, #dfd7cf);
+    color: #253047;
   }
 
-  .ghost {
-    background: #d4ccc7;
-    color: #394150;
+  @media (max-width: 980px) {
+    .actions-grid {
+      grid-template-columns: 1fr;
+    }
   }
-</style>  
+
+  @media (max-width: 700px) {
+    .action-card {
+      padding: 1.1rem;
+      border-radius: 22px;
+      min-height: 150px;
+    }
+  }
+</style>
